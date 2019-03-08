@@ -18,21 +18,21 @@ class AppVersion(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
-        self.readconfig=ReadConfig.ReadConfig()
+        # self.readconfig=ReadConfig.ReadConfig()
 
-        self.readdb.DBDelete("[AppVersionOpenRecord]")
-        self.readdb.DBDelete("[AppVersion]")
+        # self.readdb.DBDelete("[member]")
 
-    @classmethod
-    def tearDownClass(self):
-        self.readdb.DBClose()
+    # @classmethod
+    # def tearDownClass(self):
+        # self.readdb.DBClose()
 
-    def setUp(self):
-        pass
+    # def setUp(self):
+    #     pass
 
-    def tearDown(self):
-        pass
+    # def tearDown(self):
+    #     pass
 
     @ddt.data(*excel.get_xls_next(sheet_name))
     def test_AppVersion(self,data):
-        isnewversion = str(data["isnewversion"])
+        # self.readdb.GetCustomer()
+        pass
