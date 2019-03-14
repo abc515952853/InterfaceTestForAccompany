@@ -1,1 +1,13 @@
-AppVersion
+#SystemLogin
+#CenterCreate
+#CenterAll
+#CenterDetail
+#CenterUpdate
+#AssistantCreate
+#AssistantAll
+#AssistantDatail
+#AssistantUpdate
+#AssistantStateUpdate
+#AssistantCount
+#SalesmanCreate
+SalesmanAll
