@@ -34,5 +34,5 @@ class AppVersion(unittest.TestCase):
 
     @ddt.data(*excel.get_xls_next(sheet_name))
     def test_AppVersion(self,data):
-        # self.readdb.GetCustomer()
-        pass
+        self.readdb.GetCustomer()
+
