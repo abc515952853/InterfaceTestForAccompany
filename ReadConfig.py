@@ -35,10 +35,12 @@ class ReadConfig:
     #追加动态信息
     def append_dynamicdata(self,name,value):
         if name in self.get_options("DYNAMICDATA"):
-            contactids = self.get_dynamicdata(name)+','+value
+            contactids = self.get_dynamicdata(name)+'|'+value
             self.set_dynamicdata(name,contactids)
+            print('111')
         else:
             self.set_dynamicdata(name,value)
+            print('222')
 
     #获取基础信息
     def get_basedata(self,name):
