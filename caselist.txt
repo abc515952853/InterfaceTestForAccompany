@@ -10,4 +10,8 @@
 #AssistantStateUpdate
 #AssistantCount
 #SalesmanCreate
-SalesmanAll
+#SalesmanAll
+#SalesmanDetail
+#SalesmanUpdate
+#SalesmanStateUpdate
+SalesmanCount
