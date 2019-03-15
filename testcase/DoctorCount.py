@@ -36,7 +36,7 @@ class DoctorCount(unittest.TestCase):
         case_id = str(data['case_id'])
         session = str(data['session'])
         case_describe = str(data['case_describe'])
-        expected_code = str(data['expected_code'])
+        expected_code = int(data['expected_code'])
 
         url = self.readconfig.get_basedata('url_url')+api
 

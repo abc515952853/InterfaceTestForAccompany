@@ -34,7 +34,7 @@ class AccompanyCreate(unittest.TestCase):
         case_id = str(data['case_id'])
         session = str(data['session'])
         case_describe = str(data['case_describe'])
-        expected_code = str(data['expected_code'])
+        expected_code = int(data['expected_code'])
 
         patientids = list(map(str,str(self.readconfig.get_dynamicdata("patients_id")).split(','))) 
         patientid = int(random.sample(patientids,1)[0]) 

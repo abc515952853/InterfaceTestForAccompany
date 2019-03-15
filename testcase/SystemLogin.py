@@ -29,31 +29,35 @@ class SystemLogin(unittest.TestCase):
 
     @ddt.data(*excel.get_xls_next(sheet_name))
     def test_SystemLogin(self,data):
-        api = str(data['api']).format(self.readconfig.get_basedata('api_version'))
+        url = 'http://identity.c4b102e69d03f4720a18035cb3ac0dcea.cn-beijing.alicontainer.com/connect/token'
         case_id = str(data['case_id'])
         session = str(data['session'])
         case_describe = str(data['case_describe'])
-        expected_code = str(data['expected_code'])
+        expected_code = int(data['expected_code'])
 
         username = str(data['username'])
         password = str(data['password'])
 
-        # excel = ReadExcl.Xlrd()
+        excel = ReadExcl.Xlrd()
 
-        url = self.readconfig.get_basedata('url_url')+api
+        headers = {"Content-Type":"application/x-www-form-urlencoded"}
+        payload = {
+            "client_id":"js",
+            "grant_type":"password",
+            "client_secret":"ab5bb959b8e34614ae745ddebd15e2a7",
+            "username":username,
+            "password":password
+        }
+        r = requests.post(url=url,data = payload,headers = headers)
 
-        session =  self.readconfig.get_basedata(session)
-        requestid = str(uuid.uuid1())
-        headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
-        payload ={
-            }
-        # r = requests.post(url=url,data = json.dumps(payload),headers = headers)
+        #处理请求数据到excl用例文件
+        excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
+        excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
+        excel.save()
 
-        # #处理请求数据到excl用例文件
-        # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
-        # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
-        # excel.save()
-
-        # if r.status_code == 200:
-        #     self.readdb.GetRoles()
-        # self.assertEqual(r.status_code,expected_code,case_describe + api)
+        if r.status_code == 200:
+                session = r.json()["token_type"]+" "+r.json()["access_token"]
+                self.readconfig.set_basedata('session_system',session)
+        self.assertEqual(r.status_code,expected_code,case_describe + ",接口：connect/token")   
+        
+        

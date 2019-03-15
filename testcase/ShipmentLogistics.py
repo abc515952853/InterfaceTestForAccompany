@@ -34,7 +34,7 @@ class ShipmentLogistics(unittest.TestCase):
         case_id = str(data['case_id'])
         session = str(data['session'])
         case_describe = str(data['case_describe'])
-        expected_code = str(data['expected_code'])
+        expected_code = int(data['expected_code'])
 
         ordernumbers = list(map(str,str(self.readconfig.get_dynamicdata("orders_number")).split(','))) 
         ordernumber = int(random.sample(ordernumbers,1)[0]) 

@@ -34,7 +34,7 @@ class DoctorCreate(unittest.TestCase):
         case_id = str(data['case_id'])
         session = str(data['session'])
         case_describe = str(data['case_describe'])
-        expected_code = str(data['expected_code'])
+        expected_code = int(data['expected_code'])
 
         experstudioids = list(map(str,str(self.readconfig.get_dynamicdata("expertStudios_id")).split(','))) 
         experstudioid = int(random.sample(experstudioids,1)[0]) 

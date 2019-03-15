@@ -37,7 +37,7 @@ class AssistantUpdate(unittest.TestCase):
         case_id = str(data['case_id'])
         session = str(data['session'])
         case_describe = str(data['case_describe'])
-        expected_code = str(data['expected_code'])
+        expected_code = int(data['expected_code'])
 
         name = str(data['name'])
         phone = str(data['phone'])
