@@ -32,7 +32,7 @@ class AssistantUpdate(unittest.TestCase):
     @ddt.data(*excel.get_xls_next(sheet_name))
     def test_AssistantUpdate(self,data):
         assistantids = list(map(str,str(self.readconfig.get_dynamicdata("assistants_id")).split(','))) 
-        assistantid = random.sample(assistantids,1)[0] 
+        assistantid = int(random.sample(assistantids,1)[0]) 
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'),assistantid)
         case_id = str(data['case_id'])
         session = str(data['session'])
@@ -43,7 +43,7 @@ class AssistantUpdate(unittest.TestCase):
         phone = str(data['phone'])
 
         centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))) 
-        centerid = random.sample(centerids,1)[0] 
+        centerid = int(random.sample(centerids,1)[0]) 
 
         # # excel = ReadExcl.Xlrd()
 

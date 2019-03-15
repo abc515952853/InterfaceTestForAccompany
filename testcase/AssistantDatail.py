@@ -33,7 +33,7 @@ class AssistantDatail(unittest.TestCase):
     @ddt.data(*excel.get_xls_next(sheet_name))
     def test_AssistantDatail(self,data):
         assistants = list(map(str,str(self.readconfig.get_dynamicdata("assistants_id")).split(','))) 
-        assistant = random.sample(assistants,1)[0] 
+        assistant = int(random.sample(assistants,1)[0]) 
 
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'),assistant)
         case_id = str(data['case_id'])

@@ -14,4 +14,14 @@
 #SalesmanDetail
 #SalesmanUpdate
 #SalesmanStateUpdate
-SalesmanCount
+#SalesmanCount
+#ExpertStudioCreate
+#ExpertStudioAll
+#ExpertStudioDetail
+#ExperStudioUpdate
+#ExperStudioCount
+#DoctorCreate
+#DoctorAll
+#DoctorDetail
+#DoctorCount
+#DoctorUpdate

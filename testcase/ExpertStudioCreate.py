@@ -5,14 +5,13 @@ import ReadConfig
 import requests
 import json
 import uuid 
-import random
 
-sheet_name = "AssistantCreate"
+sheet_name = "ExpertStudioCreate"
 
 excel = ReadExcl.Xlrd()
 
 @ddt.ddt
-class AssistantCreate(unittest.TestCase):
+class ExpertStudioCreate(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
@@ -29,20 +28,16 @@ class AssistantCreate(unittest.TestCase):
         pass
 
     @ddt.data(*excel.get_xls_next(sheet_name))
-    def test_AssistantCreate(self,data):
+    def test_ExpertStudioCreate(self,data):
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'))
         case_id = str(data['case_id'])
         session = str(data['session'])
         case_describe = str(data['case_describe'])
         expected_code = str(data['expected_code'])
 
-        centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))) 
-        centerid = int(random.sample(centerids,1)[0]) 
-        jobNumber = str(data['jobNumber'])
-        name = str(data['name'])
         phone = str(data['phone'])
+        username = str(data['username'])
         password = str(data['password'])
-        avatar = str(data['avatar'])
 
         # # excel = ReadExcl.Xlrd()
 
@@ -52,12 +47,9 @@ class AssistantCreate(unittest.TestCase):
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
         payload ={
-            "centerId": centerid,
-            "jobNumber": jobNumber,
-            "name": name,
             "phone": phone,
-            "password": password,
-            "avatar": avatar,
+            "username": username,
+            "password": password
             }
         # r = requests.post(url=url,data = json.dumps(payload),headers = headers)
 
@@ -68,6 +60,6 @@ class AssistantCreate(unittest.TestCase):
 
         # # if r.status_code == 200:
         # #     self.readdb.GetRoles()
-        #       self.readconfig.append_dynamicdata("assistant_id",str(r.json()['id']))
+        #       self.readconfig.append_dynamicdata("expertStudios_id",str(r.json()['id']))
         # # self.assertEqual(r.status_code,expected_code,case_describe + api)
         print(url,payload)

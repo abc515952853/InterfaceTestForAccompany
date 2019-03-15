@@ -37,7 +37,7 @@ class SalesmanCreate(unittest.TestCase):
         expected_code = str(data['expected_code'])
 
         centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))) 
-        centerid = random.sample(centerids,1)[0] 
+        centerid = int(random.sample(centerids,1)[0]) 
         name = str(data['name'])
         phone = str(data['phone'])
         password = str(data['password'])

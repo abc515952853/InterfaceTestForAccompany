@@ -33,7 +33,7 @@ class SalesmanDetail(unittest.TestCase):
     @ddt.data(*excel.get_xls_next(sheet_name))
     def test_SalesmanDetail(self,data):
         salesmanids = list(map(str,str(self.readconfig.get_dynamicdata("salesmans_id")).split(','))) 
-        salesmanid = random.sample(salesmanids,1)[0] 
+        salesmanid = int(random.sample(salesmanids,1)[0]) 
 
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'),salesmanid)
         case_id = str(data['case_id'])

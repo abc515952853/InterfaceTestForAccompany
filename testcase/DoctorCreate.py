@@ -7,12 +7,12 @@ import json
 import uuid 
 import random
 
-sheet_name = "AssistantCreate"
+sheet_name = "DoctorCreate"
 
 excel = ReadExcl.Xlrd()
 
 @ddt.ddt
-class AssistantCreate(unittest.TestCase):
+class DoctorCreate(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
@@ -29,20 +29,28 @@ class AssistantCreate(unittest.TestCase):
         pass
 
     @ddt.data(*excel.get_xls_next(sheet_name))
-    def test_AssistantCreate(self,data):
+    def test_DoctorCreate(self,data):
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'))
         case_id = str(data['case_id'])
         session = str(data['session'])
         case_describe = str(data['case_describe'])
         expected_code = str(data['expected_code'])
 
-        centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))) 
-        centerid = int(random.sample(centerids,1)[0]) 
-        jobNumber = str(data['jobNumber'])
+        experstudioids = list(map(str,str(self.readconfig.get_dynamicdata("expertStudios_id")).split(','))) 
+        experstudioid = int(random.sample(experstudioids,1)[0]) 
         name = str(data['name'])
         phone = str(data['phone'])
-        password = str(data['password'])
+        idCard = str(data['idCard'])
+        certificate = str(data['certificate'])
         avatar = str(data['avatar'])
+        hospital = str(data['hospital'])
+        title = str(data['title'])
+        department = str(data['department'])
+        expertise = str(data['expertise'])
+        province = str(data['province'])
+        city = str(data['city'])
+        county = str(data['county'])
+        vitae = str(data['vitae'])
 
         # # excel = ReadExcl.Xlrd()
 
@@ -52,12 +60,20 @@ class AssistantCreate(unittest.TestCase):
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
         payload ={
-            "centerId": centerid,
-            "jobNumber": jobNumber,
             "name": name,
             "phone": phone,
-            "password": password,
+            "idCard": idCard,
+            "certificate": certificate,
             "avatar": avatar,
+            "hospital": hospital,
+            "title": title,
+            "department": department,
+            "expertise": expertise,
+            "expertStudioId": experstudioid,
+            "province": province,
+            "city": city,
+            "county": county,
+            "vitae": vitae
             }
         # r = requests.post(url=url,data = json.dumps(payload),headers = headers)
 

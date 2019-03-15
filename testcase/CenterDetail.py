@@ -33,7 +33,7 @@ class CenterDetail(unittest.TestCase):
     @ddt.data(*excel.get_xls_next(sheet_name))
     def test_CenterDetail(self,data):
         centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))) 
-        centerid = random.sample(centerids,1)[0] 
+        centerid = int(random.sample(centerids,1)[0]) 
 
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'),centerid)
         case_id = str(data['case_id'])
