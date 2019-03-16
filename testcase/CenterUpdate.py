@@ -69,10 +69,13 @@ class CenterUpdate(unittest.TestCase):
 
         if r.status_code == 200:
             centerinfo = self.readdb.GetCenterInfoById(centerid)
-            self.assertEqual(centerinfo['centerName'],centerName,case_describe + api)
-            self.assertEqual(centerinfo['principalName'],principalName,case_describe + api)
-            self.assertEqual(centerinfo['phone'],phone,case_describe + api)
-            self.assertEqual(centerinfo['county'],county,case_describe + api)
-            self.assertEqual(centerinfo['province'],province,case_describe + api)
-            self.assertEqual(centerinfo['city'],city,case_describe + api)
+            if centerinfo is not None :
+                self.assertEqual(centerinfo['centerName'],centerName,case_describe + api)
+                self.assertEqual(centerinfo['principalName'],principalName,case_describe + api)
+                self.assertEqual(centerinfo['phone'],phone,case_describe + api)
+                self.assertEqual(centerinfo['county'],county,case_describe + api)
+                self.assertEqual(centerinfo['province'],province,case_describe + api)
+                self.assertEqual(centerinfo['city'],city,case_describe + api)
+            else:
+                self.assertTrue(centerinfo,msg='数据库数据不存在') 
         self.assertEqual(r.status_code,expected_code,case_describe + api)

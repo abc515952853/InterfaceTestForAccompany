@@ -87,17 +87,19 @@ class Pyodbc:
         return centeridinfo
 
     def GetAssistantInfoByJobnumber(self,jobNumber):
-        sql = "SELECT center_id,job_number,name,phone,avatar FROM assistant \
+        sql = "SELECT assistant_id,center_id,job_number,name,phone,avatar FROM assistant \
         WHERE job_number = '{0}'".format(jobNumber)
         self.cursor.execute(sql)
         data= self.cursor.fetchone()
         if data is not None:
             assistantinfo ={
-                "center_id" : data[0],
-                "job_number" : data[1],
-                "name" : data[2],
-                "phone" : data[3],
-                "avatar" : data[4]
+                "assistant_id":data[0],
+                "center_id" : data[1],
+                "job_number" : data[2],
+                "name" : data[3],
+                "phone" : data[4],
+                "avatar" : data[5],
+                "assistant_id":data[6]
             }
         else:
             assistantinfo = None

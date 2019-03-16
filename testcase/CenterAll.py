@@ -62,12 +62,13 @@ class CenterAll(unittest.TestCase):
 
         if r.status_code == 200:
             centeridinfo = self.readdb.GetCenterInfoAllByKey(key,start,end)
-            if centeridinfo is not None:
+            if centeridinfo is not None and len(r.json()) > 0:
                 responecenterid = []
                 for i in range(len(r.json())):
                     responecenterid.append(r.json()[i]['id'])
                     self.assertIn(r.json()[i]['id'].upper(),centeridinfo,case_describe + api)
                 self.assertEqual(len(centeridinfo),len(responecenterid),case_describe + api)
             else:
-                self.assertTrue(centeridinfo,msg='接口发挥200，数据库未插入数据') 
+                self.assertFalse(r.json(),msg='返回数据不存在') 
+                self.assertFalse(centeridinfo,msg='数据库数据不存在') 
         self.assertEqual(r.status_code,expected_code,case_describe + api)

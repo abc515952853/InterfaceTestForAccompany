@@ -59,17 +59,22 @@ class AssistantCreate(unittest.TestCase):
             "password": password,
             "avatar": avatar,
             }
-        # r = requests.post(url=url,data = json.dumps(payload),headers = headers)
+        r = requests.post(url=url,data = json.dumps(payload),headers = headers)
 
         # #处理请求数据到excl用例文件
         # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
         # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
         # excel.save()
 
-        # if r.status_code == 200:
-        assistantinfo = self.readdb.GetAssistantInfoByJobnumber('1')
-        # self.assertEqual(assistantinfo['centerId'],centerId,case_describe + api)
-            # self.readconfig.append_dynamicdata("assistant_id",str(r.json()['id']))
-        self.assertTrue(assistantinfo,msg='数据未插入') 
-        print(assistantinfo)
-        # self.assertEqual(r.status_code,expected_code,case_describe + api)
+        if r.status_code == 200:
+            assistantinfo = self.readdb.GetAssistantInfoByJobnumber('1')
+            if assistantinfo is not None:
+                self.assertEqual(assistantinfo['center_id'],centerId,case_describe + api)
+                self.assertEqual(assistantinfo['job_number'],job_number,case_describe + api)
+                self.assertEqual(assistantinfo['name'],name,case_describe + api)
+                self.assertEqual(assistantinfo['phone'],phone,case_describe + api)
+                self.assertEqual(assistantinfo['avatar'],avatar,case_describe + api)
+                self.readconfig.append_dynamicdata("assistant_id",assistantinfo['assistant_id']))
+            else:
+                self.assertTrue(centerinfo,msg='数据不存在') 
+        self.assertEqual(r.status_code,expected_code,case_describe + api)

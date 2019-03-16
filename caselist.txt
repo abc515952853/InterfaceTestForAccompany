@@ -1,9 +1,9 @@
 #SystemLogin
 #CenterCreate
-#CenterAll
+CenterAll
 #CenterDetail
 #CenterUpdate
-AssistantCreate
+#AssistantCreate
 #AssistantAll
 #AssistantDatail
 #AssistantUpdate

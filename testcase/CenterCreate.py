@@ -70,13 +70,15 @@ class CenterCreate(unittest.TestCase):
 
         if r.status_code == 200:
             centerinfo = self.readdb.GetCenterInfoByName(centerName)
-            self.assertEqual(centerinfo['centerName'],centerName,case_describe + api)
-            self.assertEqual(centerinfo['principalName'],principalName,case_describe + api)
-            self.assertEqual(centerinfo['phone'],phone,case_describe + api)
-            self.assertEqual(centerinfo['username'],username,case_describe + api)
-            self.assertEqual(centerinfo['county'],county,case_describe + api)
-            self.assertEqual(centerinfo['province'],province,case_describe + api)
-            self.assertEqual(centerinfo['city'],city,case_describe + api)
-
-            self.readconfig.append_dynamicdata("centers_id",centerinfo['centerid'])
+            if centerinfo is not None:
+                self.assertEqual(centerinfo['centerName'],centerName,case_describe + api)
+                self.assertEqual(centerinfo['principalName'],principalName,case_describe + api)
+                self.assertEqual(centerinfo['phone'],phone,case_describe + api)
+                self.assertEqual(centerinfo['username'],username,case_describe + api)
+                self.assertEqual(centerinfo['county'],county,case_describe + api)
+                self.assertEqual(centerinfo['province'],province,case_describe + api)
+                self.assertEqual(centerinfo['city'],city,case_describe + api)
+                self.readconfig.append_dynamicdata("centers_id",centerinfo['centerid'])
+            else:
+                self.assertTrue(centerinfo,msg='数据不存在') 
         self.assertEqual(r.status_code,expected_code,case_describe + api)
