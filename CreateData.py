@@ -25,13 +25,14 @@ class Pyodbc:
         num = str(int(round(t)))[-5:]						
         name = '沈斌'+num
         centername = '运营中心'+ num
+        username = 'yyzx' + num
         phone = '18501'+num
         sql = "INSERT INTO `AspNetUsers`(`Id`, `UserName`,`EmailConfirmed`, `PhoneNumberConfirmed`, `TwoFactorEnabled`,`LockoutEnabled`, `AccessFailedCount`) VALUES ('{0}','{1}',0,0,1,0,0)".format(userid,name)
         self.cursor2.execute(sql)
         self.conn2.commit()
 
-        sql = "INSERT INTO `center`(`user_id`, `center_name`, `principal_name`, `phone`, `province`, `city`, `county`, `agent_number`)\
-         VALUES ('{0}','{1}','{2}','{3}','浙江省','杭州市','滨江区','{4}')".format(userid,centername,name,phone,uuid.uuid1(),)
+        sql = "INSERT INTO `center`(`user_id`, `center_name`, `principal_name`, `phone`, `province`, `city`, `county`, `agent_number`,`username`)\
+         VALUES ('{0}','{1}','{2}','{3}','浙江省','杭州市','滨江区','{4}','{5}')".format(userid,centername,name,phone,uuid.uuid1(),username)
 
         self.cursor1.execute(sql)
 
@@ -128,7 +129,7 @@ class Pyodbc:
         self.conn1.commit()
         
 if __name__ == "__main__":
-    for i in range(20):
+    for i in range(5):
         time.sleep(2)
         a = Pyodbc()
         a.CreateCenter()

@@ -53,14 +53,21 @@ class CenterAll(unittest.TestCase):
             payload["start"]= start
         if len(end) > 0:
             payload["end"]= end
-        # r = requests.get(url=url,params = payload,headers = headers)
+        r = requests.get(url=url,params = payload,headers = headers)
 
-        # # #处理请求数据到excl用例文件
-        # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
-        # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
-        # # excel.save()
+        #处理请求数据到excl用例文件
+        excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
+        excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
+        excel.save()
 
-        # # if r.status_code == 200:
-        # #     self.readdb.GetRoles()
-        # # self.assertEqual(r.status_code,expected_code,case_describe + api)
-        print(url,payload)
+        if r.status_code == 200:
+            centeridinfo = self.readdb.GetCenterInfoAllByKey(key,start,end)
+            if centeridinfo is not None:
+                responecenterid = []
+                for i in range(len(r.json())):
+                    responecenterid.append(r.json()[i]['id'])
+                    self.assertIn(r.json()[i]['id'].upper(),centeridinfo,case_describe + api)
+                self.assertEqual(len(centeridinfo),len(responecenterid),case_describe + api)
+            else:
+                self.assertTrue(centeridinfo,msg='接口发挥200，数据库未插入数据') 
+        self.assertEqual(r.status_code,expected_code,case_describe + api)

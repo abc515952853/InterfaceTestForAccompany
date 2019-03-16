@@ -61,15 +61,22 @@ class CenterCreate(unittest.TestCase):
             "city": city,
             "county": county
             }
-        # r = requests.post(url=url,data = json.dumps(payload),headers = headers)
+        r = requests.post(url=url,data = json.dumps(payload),headers = headers)
 
-        # # #处理请求数据到excl用例文件
-        # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
-        # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
-        # # excel.save()
+        #处理请求数据到excl用例文件
+        excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
+        excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
+        excel.save()
 
-        # # if r.status_code == 200:
-        # #     self.readdb.GetRoles()
-        #       self.readconfig.append_dynamicdata("center_id",str(r.json()['id']))
-        # # self.assertEqual(r.status_code,expected_code,case_describe + api)
-        print(url,payload)
+        if r.status_code == 200:
+            centerinfo = self.readdb.GetCenterInfoByName(centerName)
+            self.assertEqual(centerinfo['centerName'],centerName,case_describe + api)
+            self.assertEqual(centerinfo['principalName'],principalName,case_describe + api)
+            self.assertEqual(centerinfo['phone'],phone,case_describe + api)
+            self.assertEqual(centerinfo['username'],username,case_describe + api)
+            self.assertEqual(centerinfo['county'],county,case_describe + api)
+            self.assertEqual(centerinfo['province'],province,case_describe + api)
+            self.assertEqual(centerinfo['city'],city,case_describe + api)
+
+            self.readconfig.append_dynamicdata("centers_id",centerinfo['centerid'])
+        self.assertEqual(r.status_code,expected_code,case_describe + api)

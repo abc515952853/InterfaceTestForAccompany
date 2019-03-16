@@ -61,13 +61,15 @@ class AssistantCreate(unittest.TestCase):
             }
         # r = requests.post(url=url,data = json.dumps(payload),headers = headers)
 
-        # # #处理请求数据到excl用例文件
-        # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
-        # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
-        # # excel.save()
+        # #处理请求数据到excl用例文件
+        # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
+        # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
+        # excel.save()
 
-        # # if r.status_code == 200:
-        # #     self.readdb.GetRoles()
-        #       self.readconfig.append_dynamicdata("assistant_id",str(r.json()['id']))
-        # # self.assertEqual(r.status_code,expected_code,case_describe + api)
-        print(url,payload)
+        # if r.status_code == 200:
+        assistantinfo = self.readdb.GetAssistantInfoByJobnumber('1')
+        # self.assertEqual(assistantinfo['centerId'],centerId,case_describe + api)
+            # self.readconfig.append_dynamicdata("assistant_id",str(r.json()['id']))
+        self.assertTrue(assistantinfo,msg='数据未插入') 
+        print(assistantinfo)
+        # self.assertEqual(r.status_code,expected_code,case_describe + api)

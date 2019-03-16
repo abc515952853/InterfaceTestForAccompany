@@ -24,11 +24,86 @@ class Pyodbc:
         self.cursor.execute(sql)
         self.conn.commit()
 
-    def GetRoles(self):
-        sql = "SELECT * FROM user_salesman"
+    def GetCenterInfoByName(self,name):
+        sql = "SELECT center_name,principal_name,phone,province,city,county,username,center_id,agent_number,create_time,remark  FROM center WHERE center_name = '{0}'".format(name)
         self.cursor.execute(sql)
-        a= self.cursor.fetchone()
-        print(a)
+        data= self.cursor.fetchone()
+        if data is not None:
+            centerinfo  = {
+                "centerName": data[0],
+                "principalName": data[1],
+                "phone": data[2],
+                # "password": data[4],
+                "province": data[3],
+                "city": data[4],
+                "county": data[5],
+                "username": data[6],
+                "centerid":data[7]
+            }
+        else:
+            centerinfo = None
+        return centerinfo
+
+    def GetCenterInfoById(self,id):
+        sql = "SELECT center_name,principal_name,phone,province,city,county,username,center_id,agent_number,create_time,remark  FROM center WHERE center_id = '{0}'".format(id)
+        self.cursor.execute(sql)
+        data= self.cursor.fetchone()
+        if data is not None:
+            centerinfo  = {
+                "centerName": data[0],
+                "principalName": data[1],
+                "phone": data[2],
+                # "password": data[4],
+                "province": data[3],
+                "city": data[4],
+                "county": data[5],
+                "username": data[6],
+                "centerid":data[7]
+            }
+        else:
+            centerinfo = None
+        return centerinfo
+
+    def GetCenterInfoAllByKey(self,key,start,end):
+        if len(start) == 0:
+            start = '0'
+        if len(end) == 0:
+            end = '19'
+            
+        if len(key) > 0:
+            sql = "SELECT center_id from center \
+            WHERE phone like '%{0}%' or principal_name like '%{0}%' or center_name like '%{0}%' ORDER BY create_time desc  LIMIT {1},{2}".format(key,start,end)
+        else:
+            sql = "SELECT center_id from center \
+            ORDER BY create_time desc  LIMIT {1},{2}".format(key,start,end)
+        self.cursor.execute(sql)
+        data= self.cursor.fetchall()
+        centeridinfo = []
+        if data is not None:
+            for i in range(len(data)):
+                centeridinfo.append(data[i][0])
+        else:
+            centeridinfo = None
+        return centeridinfo
+
+    def GetAssistantInfoByJobnumber(self,jobNumber):
+        sql = "SELECT center_id,job_number,name,phone,avatar FROM assistant \
+        WHERE job_number = '{0}'".format(jobNumber)
+        self.cursor.execute(sql)
+        data= self.cursor.fetchone()
+        if data is not None:
+            assistantinfo ={
+                "center_id" : data[0],
+                "job_number" : data[1],
+                "name" : data[2],
+                "phone" : data[3],
+                "avatar" : data[4]
+            }
+        else:
+            assistantinfo = None
+        return assistantinfo
+        
+
 
 # if __name__ == "__main__":
 #     a = Pyodbc()
