@@ -1,6 +1,6 @@
 #SystemLogin
 #CenterCreate
-CenterAll
+#CenterAll
 #CenterDetail
 #CenterUpdate
 #AssistantCreate
@@ -8,7 +8,7 @@ CenterAll
 #AssistantDatail
 #AssistantUpdate
 #AssistantStateUpdate
-#AssistantCount
+AssistantCount
 #SalesmanCreate
 #SalesmanAll
 #SalesmanDetail

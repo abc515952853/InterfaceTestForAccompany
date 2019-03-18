@@ -46,14 +46,22 @@ class AssistantDatail(unittest.TestCase):
         session =  self.readconfig.get_basedata(session)
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
-        # r = requests.get(url=url,headers = headers)
+        r = requests.get(url=url,headers = headers)
 
         # # #处理请求数据到excl用例文件
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
         # # excel.save()
 
-        # # if r.status_code == 200:
-        # #     self.readdb.GetRoles()
-        # # self.assertEqual(r.status_code,expected_code,case_describe + api)
-        print(url)
+        if r.status_code == 200:
+            assistantinfo = self.readdb.GetAssistanctInfoById(r.json()['id'])
+            if assistantinfo is not None and len(r.json()) > 0:
+                self.assertEqual(assistantinfo['center_id'],r.json()['center_id'],case_describe + api)
+                self.assertEqual(assistantinfo['job_number'],r.json()['job_number'],case_describe + api)
+                self.assertEqual(assistantinfo['name'],r.json()['name'],case_describe + api)
+                self.assertEqual(assistantinfo['phone'],r.json()['phone'],case_describe + api)
+                self.assertEqual(assistantinfo['avatar'],r.json()['avatar'],case_describe + api)
+            else:
+                self.assertTrue(assistantinfo,msg='数据库数据不存在') 
+                self.assertTrue(r.json(),msg='数据库数据不存在')
+        self.assertEqual(r.status_code,expected_code,case_describe + api)

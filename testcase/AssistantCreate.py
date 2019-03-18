@@ -76,5 +76,5 @@ class AssistantCreate(unittest.TestCase):
                 self.assertEqual(assistantinfo['avatar'],avatar,case_describe + api)
                 self.readconfig.append_dynamicdata("assistant_id",assistantinfo['assistant_id']))
             else:
-                self.assertTrue(centerinfo,msg='数据不存在') 
+                self.assertTrue(centerinfo,msg='数据库数据不存在') 
         self.assertEqual(r.status_code,expected_code,case_describe + api)

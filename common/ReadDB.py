@@ -104,6 +104,58 @@ class Pyodbc:
         else:
             assistantinfo = None
         return assistantinfo
+
+    def GetAssistantInfoAllByKey(self,key,start,end):
+        if len(start) == 0:
+            start = '0'
+        if len(end) == 0:
+            end = '19'
+            
+        if len(key) > 0:
+            sql = "SELECT assistant_id from assistant \
+            WHERE phone like '%{0}%' or job_number like '%{0}%' or name like '%{0}%' ORDER BY create_time desc  LIMIT {1},{2}".format(key,start,end)
+        else:
+            sql = "SELECT assistant_id from assistant \
+            ORDER BY create_time desc  LIMIT {1},{2}".format(key,start,end)
+        self.cursor.execute(sql)
+        data= self.cursor.fetchall()
+        assistantidinfo = []
+        if data is not None:
+            for i in range(len(data)):
+                assistantidinfo.append(data[i][0])
+        else:
+            assistantidinfo = None
+        return assistantidinfo
+
+    def GetAssistanctInfoById(self,id):
+        sql = "SELECT center_id,job_number,name,phone,avatar,state FROM assistant WHERE assistant_id = '{0}'".format(id)
+        self.cursor.execute(sql)
+        data= self.cursor.fetchone()
+        if data is not None:
+            centerinfo  = {
+                "center_id": data[0],
+                "job_number": data[1],
+                "name": data[2],
+                "phone": data[3],
+                "avatar": data[4],
+                "state":data[5]
+            }
+        else:
+            centerinfo = None
+        return centerinfo
+    
+    def GetAssistantCountByCenterid(self,centerid = None):
+        if centerid is None:
+            sql = "SELECT count(*) from assistant"
+        else:
+            sql = "SELECT count(*) from assistant where center_id={0}".format(centerid)
+        self.cursor.execute(sql)
+        data= self.cursor.fetchone()
+        if data is not None:
+            assistantcountinfo = data[0]
+        else:
+            assistantcountinfo = None
+        return assistantcountinfo
         
 
 

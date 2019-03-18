@@ -63,10 +63,10 @@ class CenterCreate(unittest.TestCase):
             }
         r = requests.post(url=url,data = json.dumps(payload),headers = headers)
 
-        #处理请求数据到excl用例文件
-        excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
-        excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
-        excel.save()
+        # #处理请求数据到excl用例文件
+        # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
+        # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
+        # excel.save()
 
         if r.status_code == 200:
             centerinfo = self.readdb.GetCenterInfoByName(centerName)
@@ -80,5 +80,5 @@ class CenterCreate(unittest.TestCase):
                 self.assertEqual(centerinfo['city'],city,case_describe + api)
                 self.readconfig.append_dynamicdata("centers_id",centerinfo['centerid'])
             else:
-                self.assertTrue(centerinfo,msg='数据不存在') 
+                self.assertTrue(centerinfo,msg='数据库数据不存在') 
         self.assertEqual(r.status_code,expected_code,case_describe + api)

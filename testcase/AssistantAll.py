@@ -6,12 +6,12 @@ import requests
 import json
 import uuid 
 
-sheet_name = "CenterAll"
+sheet_name = "AssistantAll"
 
 excel = ReadExcl.Xlrd()
 
 @ddt.ddt
-class CenterAll(unittest.TestCase):
+class AssistantAll(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
@@ -28,7 +28,7 @@ class CenterAll(unittest.TestCase):
         pass
 
     @ddt.data(*excel.get_xls_next(sheet_name))
-    def test_CenterAll(self,data):
+    def test_AssistantAll(self,data):
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'))
         case_id = str(data['case_id'])
         session = str(data['session'])
@@ -53,7 +53,6 @@ class CenterAll(unittest.TestCase):
             payload["start"]= start
         if len(end) > 0:
             payload["end"]= end
-
         r = requests.get(url=url,params = payload,headers = headers)
 
         # #处理请求数据到excl用例文件
@@ -62,14 +61,14 @@ class CenterAll(unittest.TestCase):
         # excel.save()
 
         if r.status_code == 200:
-            centeridinfo = self.readdb.GetCenterInfoAllByKey(key,start,end)
-            if centeridinfo is not None and len(r.json()) > 0:
-                responecenterid = []
+            assistantinfo = self.readdb.GetAssistantInfoAllByKey(key,start,end)
+            if assistantinfo is not None and len(r.json()) > 0:
+                responeassistantid = []
                 for i in range(len(r.json())):
-                    responecenterid.append(r.json()[i]['id'])
-                    self.assertIn(r.json()[i]['id'].upper(),centeridinfo,case_describe + api)
-                self.assertEqual(len(centeridinfo),len(responecenterid),case_describe + api)
+                    responeassistantid.append(r.json()[i]['id'])
+                    self.assertIn(r.json()[i]['id'].upper(),assistantinfo,case_describe + api)
+                self.assertEqual(len(assistantinfo),len(responeassistantid),case_describe + api)
             else:
                 self.assertFalse(r.json(),msg='返回数据有误') 
-                self.assertFalse(centeridinfo,msg='数据库数据有误') 
+                self.assertFalse(assistantinfo,msg='数据库数据有误') 
         self.assertEqual(r.status_code,expected_code,case_describe + api)
