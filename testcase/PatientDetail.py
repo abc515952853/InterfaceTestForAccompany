@@ -8,12 +8,12 @@ import uuid
 import random
 
 
-sheet_name = "AssistantDatail"
+sheet_name = "PatientDatail"
 
 excel = ReadExcl.Xlrd()
 
 @ddt.ddt
-class AssistantDatail(unittest.TestCase):
+class PatientDatail(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
@@ -31,11 +31,11 @@ class AssistantDatail(unittest.TestCase):
 
 
     @ddt.data(*excel.get_xls_next(sheet_name))
-    def test_AssistantDatail(self,data):
-        assistants = list(map(str,str(self.readconfig.get_dynamicdata("assistants_id")).split(','))) 
-        assistant = int(random.sample(assistants,1)[0]) 
+    def test_PatientDatail(self,data):
+        patientids = list(map(str,str(self.readconfig.get_dynamicdata("patients_id")).split(','))) 
+        patientid = int(random.sample(patientids,1)[0]) 
 
-        api = str(data['api']).format(self.readconfig.get_basedata('api_version'),assistant)
+        api = str(data['api']).format(self.readconfig.get_basedata('api_version'),patientid)
         case_id = str(data['case_id'])
         session = str(data['session'])
         case_describe = str(data['case_describe'])
@@ -54,16 +54,18 @@ class AssistantDatail(unittest.TestCase):
         # # excel.save()
 
         if r.status_code == 200:
-            assistantinfo = self.readdb.GetAssistanctInfoById(r.json()['id'])
-            if assistantinfo is not None and len(r.json()) > 0:
-                self.assertEqual(assistantinfo['center_id'],r.json()['center_id'],case_describe + api)
-                self.assertEqual(assistantinfo['job_number'],r.json()['job_number'],case_describe + api)
-                self.assertEqual(assistantinfo['name'],r.json()['name'],case_describe + api)
-                self.assertEqual(assistantinfo['phone'],r.json()['phone'],case_describe + api)
-                self.assertEqual(assistantinfo['avatar'],r.json()['avatar'],case_describe + api)
-                self.assertEqual(assistantinfo['patient_number'],r.json()['patient_number'],case_describe + api)
-                self.assertEqual(assistantinfo['doctor_number'],r.json()['doctor_number'],case_describe + api)
+            patientinfo = self.readdb.GetPatienInfoById(patientid)
+            if patientinfo is not None and len(r.json()) > 0:
+                self.assertEqual(patientinfo['name'],r.json()['name'],case_describe + api)
+                self.assertEqual(patientinfo['phone'],r.json()['phone'],case_describe + api)
+                self.assertEqual(patientinfo['relationship'],r.json()['relationship'],case_describe + api)
+                self.assertEqual(patientinfo['phone'],r.json()['phone'],case_describe + api)
+                self.assertEqual(patientinfo['diseases'],r.json()['diseases'],case_describe + api)
+                self.assertEqual(patientinfo['province'],r.json()['province'],case_describe + api)
+                self.assertEqual(patientinfo['city'],r.json()['city'],case_describe + api)
+                self.assertEqual(patientinfo['doctorid'],r.json()['doctorid'],case_describe + api)
+                self.assertEqual(patientinfo['assistantid'],r.json()['assistantid'],case_describe + api)
             else:
-                self.assertTrue(assistantinfo,msg='数据库数据不存在') 
+                self.assertTrue(patientinfo,msg='数据库数据不存在') 
                 self.assertTrue(r.json(),msg='数据库数据不存在')
         self.assertEqual(r.status_code,expected_code,case_describe + api)

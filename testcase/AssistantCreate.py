@@ -67,7 +67,7 @@ class AssistantCreate(unittest.TestCase):
         # excel.save()
 
         if r.status_code == 200:
-            assistantinfo = self.readdb.GetAssistantInfoByJobnumber('1')
+            assistantinfo = self.readdb.GetAssistantInfoByJobnumber(jobNumber)
             if assistantinfo is not None:
                 self.assertEqual(assistantinfo['center_id'],centerId,case_describe + api)
                 self.assertEqual(assistantinfo['job_number'],job_number,case_describe + api)

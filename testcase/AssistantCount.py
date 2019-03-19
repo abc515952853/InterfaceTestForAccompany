@@ -43,7 +43,7 @@ class AssistantCount(unittest.TestCase):
         session =  self.readconfig.get_basedata(sessiondata)
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
-        # r = requests.get(url=url,headers = headers)
+        r = requests.get(url=url,headers = headers)
 
         # # #处理请求数据到excl用例文件
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
@@ -52,7 +52,8 @@ class AssistantCount(unittest.TestCase):
 
         if r.status_code == 200:
             if sessiondata == 'session_system':
-                centerid = int(list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(',')))[-1])
+                centerids = int(list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))))
+                centerid = int(random.sample(centerids,1)[0]) 
                 assistantcountinfo = self.readdb.GetAssistantCountByCenterid(centerid)
             else:
                 centerid = 0

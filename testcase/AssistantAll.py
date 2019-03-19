@@ -4,7 +4,8 @@ from common import ReadExcl,ReadDB
 import ReadConfig 
 import requests
 import json
-import uuid 
+import uuid
+import random
 
 sheet_name = "AssistantAll"
 
@@ -31,7 +32,7 @@ class AssistantAll(unittest.TestCase):
     def test_AssistantAll(self,data):
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'))
         case_id = str(data['case_id'])
-        session = str(data['session'])
+        sessiondata = str(data['session'])
         case_describe = str(data['case_describe'])
         expected_code = int(data['expected_code'])
 
@@ -43,7 +44,7 @@ class AssistantAll(unittest.TestCase):
 
         url = self.readconfig.get_basedata('url_url')+api
 
-        session =  self.readconfig.get_basedata(session)
+        session =  self.readconfig.get_basedata(sessiondata)
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
         payload = {}
@@ -61,7 +62,12 @@ class AssistantAll(unittest.TestCase):
         # excel.save()
 
         if r.status_code == 200:
-            assistantinfo = self.readdb.GetAssistantInfoAllByKey(key,start,end)
+            if sessiondata == 'session_system':
+                assistantinfo = self.readdb.GetAssistantInfoAllByKey(key,start,end)
+            else:
+                centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(',')))
+                centerid = int(random.sample(centerids,1)[0]) 
+                assistantinfo = self.readdb.GetAssistantInfoAllByKey(key,start,end,centerid)
             if assistantinfo is not None and len(r.json()) > 0:
                 responeassistantid = []
                 for i in range(len(r.json())):

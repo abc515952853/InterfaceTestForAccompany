@@ -4,11 +4,11 @@
 #CenterDetail
 #CenterUpdate
 #AssistantCreate
-#AssistantAll
+AssistantAll
 #AssistantDatail
 #AssistantUpdate
 #AssistantStateUpdate
-AssistantCount
+#AssistantCount
 #SalesmanCreate
 #SalesmanAll
 #SalesmanDetail

@@ -8,12 +8,12 @@ import json
 import uuid 
 import random
 
-sheet_name = "SalesmanUpdate"
+sheet_name = "SalesmanStateUpdate"
 
 excel = ReadExcl.Xlrd()
 
 @ddt.ddt
-class SalesmanUpdate(unittest.TestCase):
+class SalesmanStateUpdate(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
@@ -30,8 +30,8 @@ class SalesmanUpdate(unittest.TestCase):
         pass
 
     @ddt.data(*excel.get_xls_next(sheet_name))
-    def test_SalesmanUpdate(self,data):
-        salesmanids = list(map(str,str(self.readconfig.get_dynamicdata("salesmans_id")).split(','))) 
+    def test_SalesmanStateUpdate(self,data):
+        salesmanids = list(map(str,str(self.readconfig.get_dynamicdata("assistants_id")).split(','))) 
         salesmanid = int(random.sample(salesmanids,1)[0]) 
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'),salesmanid)
         case_id = str(data['case_id'])
@@ -39,9 +39,7 @@ class SalesmanUpdate(unittest.TestCase):
         case_describe = str(data['case_describe'])
         expected_code = int(data['expected_code'])
 
-        name = str(data['name'])
-        phone = str(data['phone'])
-        agentNumber = str(data['agentNumber'])
+        state = str(data['state'])
 
         # # excel = ReadExcl.Xlrd()
 
@@ -51,9 +49,7 @@ class SalesmanUpdate(unittest.TestCase):
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
         payload ={
-            "name": name,
-            "phone": phone,
-            "agentNumber": agentNumber
+            "state": state
             }
         # r = requests.put(url=url,data = json.dumps(payload),headers = headers)
 
@@ -62,7 +58,10 @@ class SalesmanUpdate(unittest.TestCase):
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
         # # excel.save()
 
-        # # if r.status_code == 200:
-        # #     self.readdb.GetRoles()
-        # # self.assertEqual(r.status_code,expected_code,case_describe + api)
-        print(url,payload)
+        if r.status_code == 200:
+            salesmaninfo = self.readdb.GetSalesmanInfoById(salesmanid)
+            if salesmaninfo is not None and len(r.json()) > 0:
+                self.assertEqual(salesmaninfo['state'],state,case_describe + api)
+            else:
+                self.assertTrue(salesmaninfo,msg='数据库数据不存在') 
+        self.assertEqual(r.status_code,expected_code,case_describe + api)

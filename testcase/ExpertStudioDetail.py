@@ -46,14 +46,29 @@ class ExpertStudioDetail(unittest.TestCase):
         session =  self.readconfig.get_basedata(session)
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
-        # r = requests.get(url=url,headers = headers)
+        r = requests.get(url=url,headers = headers)
 
         # # #处理请求数据到excl用例文件
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
         # # excel.save()
 
-        # # if r.status_code == 200:
-        # #     self.readdb.GetRoles()
-        # # self.assertEqual(r.status_code,expected_code,case_describe + api)
-        print(url)
+        if r.status_code == 200:
+            expertstudioinfo = self.readdb.GetExpertStudioinfoById(r.json()['id'])
+            if expertstudioinfo is not None and len(r.json()) > 0:
+                self.assertEqual(expertstudioinfo['phone'],r.json()['phone'],case_describe + api)
+                self.assertEqual(expertstudioinfo['name'],r.json()['name'],case_describe + api)
+                self.assertEqual(expertstudioinfo['avatar'],r.json()['avatar'],case_describe + api)
+                self.assertEqual(expertstudioinfo['hospital'],r.json()['hospital'],case_describe + api)
+                self.assertEqual(expertstudioinfo['title'],r.json()['title'],case_describe + api)
+                self.assertEqual(expertstudioinfo['province'],r.json()['province'],case_describe + api)
+                self.assertEqual(expertstudioinfo['city'],r.json()['city'],case_describe + api)
+                self.assertEqual(expertstudioinfo['county'],r.json()['county'],case_describe + api)
+                self.assertEqual(expertstudioinfo['expertise'],r.json()['expertise'],case_describe + api)
+                self.assertEqual(expertstudioinfo['vitae'],r.json()['vitae'],case_describe + api)
+                self.assertEqual(expertstudioinfo['remark'],r.json()['remark'],case_describe + api)
+                self.assertEqual(expertstudioinfo['doctor_number'],r.json()['doctor_number'],case_describe + api)
+            else:
+                self.assertTrue(expertstudioinfo,msg='数据库数据不存在') 
+                self.assertTrue(r.json(),msg='数据库数据不存在')
+        self.assertEqual(r.status_code,expected_code,case_describe + api)

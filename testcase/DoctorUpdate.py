@@ -78,14 +78,30 @@ class DoctorUpdate(unittest.TestCase):
             "county": county,
             "vitae": vitae
             }
-        # r = requests.put(url=url,data = json.dumps(payload),headers = headers)
+        r = requests.put(url=url,data = json.dumps(payload),headers = headers)
 
         # # #处理请求数据到excl用例文件
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
         # # excel.save()
 
-        # # if r.status_code == 200:
-        # #     self.readdb.GetRoles()
-        # # self.assertEqual(r.status_code,expected_code,case_describe + api)
-        print(url,payload)
+        if r.status_code == 200:
+            doctorinfo = self.readdb.GetCenterInfoById(doctorid)
+            if doctorid is not None :
+                self.assertEqual(doctorinfo['name'],r.json()['name'],case_describe + api)
+                self.assertEqual(doctorinfo['phone'],r.json()['phone'],case_describe + api)
+                self.assertEqual(doctorinfo['idCard'],r.json()['idCard'],case_describe + api)
+                self.assertEqual(doctorinfo['certificate'],r.json()['certificate'],case_describe + api)
+                self.assertEqual(doctorinfo['avatar'],r.json()['avatar'],case_describe + api)
+                self.assertEqual(doctorinfo['hospital'],r.json()['hospital'],case_describe + api)
+                self.assertEqual(doctorinfo['title'],r.json()['title'],case_describe + api)
+                self.assertEqual(doctorinfo['department'],r.json()['department'],case_describe + api)
+                self.assertEqual(doctorinfo['expertise'],r.json()['expertise'],case_describe + api)
+                self.assertEqual(doctorinfo['expertStudioId'],r.json()['expertStudioId'],case_describe + api)
+                self.assertEqual(doctorinfo['province'],r.json()['province'],case_describe + api)
+                self.assertEqual(doctorinfo['city'],r.json()['city'],case_describe + api)
+                self.assertEqual(doctorinfo['county'],r.json()['county'],case_describe + api)
+                self.assertEqual(doctorinfo['vitae'],r.json()['vitae'],case_describe + api)
+            else:
+                self.assertTrue(doctorid,msg='数据库数据不存在') 
+        self.assertEqual(r.status_code,expected_code,case_describe + api)

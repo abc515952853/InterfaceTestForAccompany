@@ -82,8 +82,25 @@ class DoctorCreate(unittest.TestCase):
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
         # # excel.save()
 
-        # # if r.status_code == 200:
-        # #     self.readdb.GetRoles()
-        #       self.readconfig.append_dynamicdata("assistant_id",str(r.json()['id']))
-        # # self.assertEqual(r.status_code,expected_code,case_describe + api)
-        print(url,payload)
+        if r.status_code == 200:
+            doctorinfo = self.readdb.GetDoctorinfoInfoByName(name)
+            if doctorinfo is not None:
+                self.assertEqual(doctorinfo['doctor  _id'],centerId,case_describe + api)
+                self.assertEqual(doctorinfo['name'],centerId,case_describe + api)
+                self.assertEqual(doctorinfo['phone'],job_number,case_describe + api)
+                self.assertEqual(doctorinfo['idCard'],name,case_describe + api)
+                self.assertEqual(doctorinfo['certificate'],phone,case_describe + api)
+                self.assertEqual(doctorinfo['avatar'],avatar,case_describe + api)
+                self.assertEqual(doctorinfo['hospital'],centerId,case_describe + api)
+                self.assertEqual(doctorinfo['title'],job_number,case_describe + api)
+                self.assertEqual(doctorinfo['department'],name,case_describe + api)
+                self.assertEqual(doctorinfo['expertise'],phone,case_describe + api)
+                self.assertEqual(doctorinfo['expertStudioId'],avatar,case_describe + api)
+                self.assertEqual(doctorinfo['province'],job_number,case_describe + api)
+                self.assertEqual(doctorinfo['city'],name,case_describe + api)
+                self.assertEqual(doctorinfo['county'],phone,case_describe + api)
+                self.assertEqual(doctorinfo['vitae'],avatar,case_describe + api)
+                self.readconfig.append_dynamicdata("doctors_id",assistantinfo['assistant_id']))
+            else:
+                self.assertTrue(centerinfo,msg='数据库数据不存在') 
+        self.assertEqual(r.status_code,expected_code,case_describe + api)
