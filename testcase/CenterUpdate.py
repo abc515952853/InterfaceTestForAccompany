@@ -78,4 +78,4 @@ class CenterUpdate(unittest.TestCase):
                 self.assertEqual(centerinfo['city'],city,case_describe + api)
             else:
                 self.assertTrue(centerinfo,msg='数据库数据不存在') 
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

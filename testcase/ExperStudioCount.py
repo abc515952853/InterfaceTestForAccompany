@@ -38,12 +38,19 @@ class ExperStudioCount(unittest.TestCase):
         case_describe = str(data['case_describe'])
         expected_code = int(data['expected_code'])
 
+        key = str(data['key'])
+
         url = self.readconfig.get_basedata('url_url')+api
 
         session =  self.readconfig.get_basedata(session)
         requestid = str(uuid.uuid1())
+
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
-        r = requests.get(url=url,headers = headers)
+        payload = {}
+        if len(key) > 0:
+            payload["key"]  = key
+
+        r = requests.get(url=url,params = payload,headers = headers)
 
         # # #处理请求数据到excl用例文件
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
@@ -51,10 +58,10 @@ class ExperStudioCount(unittest.TestCase):
         # # excel.save()
 
         if r.status_code == 200:
-            expertstudiocountinfo = self.readdb.GetExpertstudioCount()
-            if expertstudiocountinfo is not None and len(r.json()) > 0:
-                self.assertEqual(expertstudiocountinfo,r.json(),case_describe + api)
+            expertstudiocountinfo = self.readdb.GetExpertstudioCount(key)
+            if expertstudiocountinfo >0 and r.json()>0:
+                   self.assertEqual(expertstudiocountinfo,r.json(),case_describe + api)
             else:
-                self.assertTrue(expertstudiocountinfo,msg='数据库数据不存在') 
-                self.assertTrue(r.json(),msg='数据库数据不存在')
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+                self.assertFalse(r.json(),msg='返回数据有误') 
+                self.assertFalse(expertstudiocountinfo,msg='数据库数据有误') 
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

@@ -66,9 +66,9 @@ class DoctorAll(unittest.TestCase):
                 responedoctorid = []
                 for i in range(len(r.json())):
                     responedoctorid.append(r.json()[i]['id'])
-                    self.assertIn(r.json()[i]['id'].upper(),doctorinfo,case_describe + api)
+                    self.assertIn(int(r.json()[i]['id'].upper()),doctorinfo,case_describe + api)
                 self.assertEqual(len(doctorinfo),len(responedoctorid),case_describe + api)
             else:
                 self.assertFalse(r.json(),msg='返回数据有误') 
                 self.assertFalse(doctorinfo,msg='数据库数据有误') 
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

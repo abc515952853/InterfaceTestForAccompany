@@ -4,16 +4,15 @@ from common import ReadExcl,ReadDB
 import ReadConfig 
 import requests
 import json
-import uuid 
+import uuid
 import random
 
-
-sheet_name = "PatientCount"
+sheet_name = "SalesmanAll"
 
 excel = ReadExcl.Xlrd()
 
 @ddt.ddt
-class PatientCount(unittest.TestCase):
+class SalesmanAll(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
@@ -29,21 +28,33 @@ class PatientCount(unittest.TestCase):
     def tearDown(self):
         pass
 
-
     @ddt.data(*excel.get_xls_next(sheet_name))
-    def test_PatientCount(self,data):
+    def test_SalesmanAll(self,data):
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'))
         case_id = str(data['case_id'])
         sessiondata = str(data['session'])
         case_describe = str(data['case_describe'])
         expected_code = int(data['expected_code'])
 
+        key = str(data['key'])
+        start = str(data['start'])
+        end = str(data['end'])
+        
+        # # excel = ReadExcl.Xlrd()
+
         url = self.readconfig.get_basedata('url_url')+api
 
         session =  self.readconfig.get_basedata(sessiondata)
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
-        r = requests.get(url=url,headers = headers)
+        payload = {}
+        if len(key) > 0:
+            payload["key"]  = key
+        if len(start) > 0:
+            payload["start"]= start
+        if len(end) > 0:
+            payload["end"]= end
+        r = requests.get(url=url,params = payload,headers = headers)
 
         # # #处理请求数据到excl用例文件
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
@@ -52,14 +63,18 @@ class PatientCount(unittest.TestCase):
 
         if r.status_code == 200:
             if sessiondata == 'session_system':
-                centerids = int(list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))))
+                salesmaninfo = self.readdb.GetSalesmanInfoAllByKey(key,start,end)
+            else:
+                centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(',')))
                 centerid = int(random.sample(centerids,1)[0]) 
-                patientinfo = self.readdb.GetPatientCountByCenterid(centerid)
+                salesmaninfo = self.readdb.GetSalesmanInfoAllByKey(key,start,end,centerid)
+            if salesmaninfo is not None and len(r.json()) > 0:
+                responesalesmanid = []
+                for i in range(len(r.json())):
+                    responesalesmanid.append(r.json()[i]['id'])
+                    self.assertIn(r.json()[i]['id'].upper(),salesmaninfo,case_describe + api)
+                self.assertEqual(len(salesmaninfo),len(responesalesmanid),case_describe + api)
             else:
-                patientinfo = self.readdb.GetPatientCountByCenterid()
-            if patientinfo is not None and len(r.json()) > 0:
-                self.assertEqual(patientinfo,r.json(),case_describe + api)
-            else:
-                self.assertTrue(patientinfo,msg='数据库数据不存在') 
-                self.assertTrue(r.json(),msg='数据库数据不存在')
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+                self.assertFalse(r.json(),msg='返回数据有误') 
+                self.assertFalse(salesmaninfo,msg='数据库数据有误') 
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

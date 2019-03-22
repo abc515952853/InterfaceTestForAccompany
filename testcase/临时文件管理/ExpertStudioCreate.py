@@ -67,28 +67,29 @@ class ExpertStudioCreate(unittest.TestCase):
             "vitae": vitae,
             "remark": remark
             }
-        r = requests.post(url=url,data = json.dumps(payload),headers = headers)
+        print(payload)
+        # r = requests.post(url=url,data = json.dumps(payload),headers = headers)
 
-        # # #处理请求数据到excl用例文件
-        # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
-        # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
-        # # excel.save()
+        # # # #处理请求数据到excl用例文件
+        # # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
+        # # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
+        # # # excel.save()
 
-        if r.status_code == 200:
-            expertstudioinfo = self.readdb.GetExpertstudioInfoByName(name)
-            if expertstudioinfo is not None:
-                self.assertEqual(expertstudioinfo['phone'],phone,case_describe + api)
-                self.assertEqual(expertstudioinfo['name'],name,case_describe + api)
-                self.assertEqual(expertstudioinfo['avatar'],avatar,case_describe + api)
-                self.assertEqual(expertstudioinfo['hospital'],hospital,case_describe + api)
-                self.assertEqual(expertstudioinfo['title'],title,case_describe + api)
-                self.assertEqual(expertstudioinfo['province'],province,case_describe + api)
-                self.assertEqual(expertstudioinfo['city'],city,case_describe + api)
-                self.assertEqual(expertstudioinfo['county'],county,case_describe + api)
-                self.assertEqual(expertstudioinfo['expertise'],expertise,case_describe + api)
-                self.assertEqual(expertstudioinfo['vitae'],vitae,case_describe + api)
-                self.assertEqual(expertstudioinfo['remark'],remark,case_describe + api)
-                self.readconfig.append_dynamicdata("expertstudios_id",expertstudioinfo['expert_studio_id'])
-            else:
-                self.assertTrue(expertstudioinfo,msg='数据库数据不存在') 
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+        # if r.status_code == 200:
+        #     expertstudioinfo = self.readdb.GetExpertstudioInfoByName(name)
+        #     if expertstudioinfo is not None:
+        #         self.assertEqual(expertstudioinfo['phone'],phone,case_describe + api)
+        #         self.assertEqual(expertstudioinfo['name'],name,case_describe + api)
+        #         self.assertEqual(expertstudioinfo['avatar'],avatar,case_describe + api)
+        #         self.assertEqual(expertstudioinfo['hospital'],hospital,case_describe + api)
+        #         self.assertEqual(expertstudioinfo['title'],title,case_describe + api)
+        #         self.assertEqual(expertstudioinfo['province'],province,case_describe + api)
+        #         self.assertEqual(expertstudioinfo['city'],city,case_describe + api)
+        #         self.assertEqual(expertstudioinfo['county'],county,case_describe + api)
+        #         self.assertEqual(expertstudioinfo['expertise'],expertise,case_describe + api)
+        #         self.assertEqual(expertstudioinfo['vitae'],vitae,case_describe + api)
+        #         self.assertEqual(expertstudioinfo['remark'],remark,case_describe + api)
+        #         self.readconfig.append_dynamicdata("expertstudios_id",expertstudioinfo['expert_studio_id'])
+        #     else:
+        #         self.assertTrue(expertstudioinfo,msg='数据库数据不存在') 
+        # self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

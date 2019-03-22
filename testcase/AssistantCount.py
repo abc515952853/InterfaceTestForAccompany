@@ -38,12 +38,17 @@ class AssistantCount(unittest.TestCase):
         case_describe = str(data['case_describe'])
         expected_code = int(data['expected_code'])
 
+        key =str(data['key'])
+
         url = self.readconfig.get_basedata('url_url')+api
 
         session =  self.readconfig.get_basedata(sessiondata)
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
-        r = requests.get(url=url,headers = headers)
+        payload = {}
+        if len(key) > 0:
+            payload["key"]  = key
+        r = requests.get(url=url,params = payload,headers = headers)
 
         # # #处理请求数据到excl用例文件
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
@@ -52,15 +57,14 @@ class AssistantCount(unittest.TestCase):
 
         if r.status_code == 200:
             if sessiondata == 'session_system':
-                centerids = int(list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))))
-                centerid = int(random.sample(centerids,1)[0]) 
-                assistantcountinfo = self.readdb.GetAssistantCountByCenterid(centerid)
+                assistantcountinfo = self.readdb.GetAssistantCountByKey(key)
             else:
-                centerid = 0
-                assistantcountinfo = self.readdb.GetAssistantCountByCenterid()
-            if assistantcountinfo is not None and len(r.json()) > 0:
+                centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(',')))
+                centerid = int(random.sample(centerids,1)[0]) 
+                assistantcountinfo = self.readdb.GetAssistantCountByKey(key,centerid)
+            if assistantcountinfo is not None and r.json() > 0:
                 self.assertEqual(assistantcountinfo,r.json(),case_describe + api)
             else:
                 self.assertTrue(assistantcountinfo,msg='数据库数据不存在') 
                 self.assertTrue(r.json(),msg='数据库数据不存在')
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

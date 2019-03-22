@@ -61,5 +61,5 @@ class ScheduleTimeUpdate(unittest.TestCase):
 
         # # if r.status_code == 200:
         # #     self.readdb.GetRoles()
-        # # self.assertEqual(r.status_code,expected_code,case_describe + api)
+        # # self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)
         print(url,payload)

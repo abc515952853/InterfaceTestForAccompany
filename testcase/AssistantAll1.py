@@ -4,14 +4,15 @@ from common import ReadExcl,ReadDB
 import ReadConfig 
 import requests
 import json
-import uuid 
+import uuid
+import random
 
-sheet_name = "CenterAll"
+sheet_name = "AssistantAll1"
 
 excel = ReadExcl.Xlrd()
 
 @ddt.ddt
-class CenterAll(unittest.TestCase):
+class AssistantAll1(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
@@ -28,48 +29,44 @@ class CenterAll(unittest.TestCase):
         pass
 
     @ddt.data(*excel.get_xls_next(sheet_name))
-    def test_CenterAll(self,data):
+    def test_AssistantAll1(self,data):
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'))
         case_id = str(data['case_id'])
-        session = str(data['session'])
+        sessiondata = str(data['session'])
         case_describe = str(data['case_describe'])
         expected_code = int(data['expected_code'])
 
-        key = str(data['key'])
-        start = str(data['start'])
-        end = str(data['end'])
-        
         # # excel = ReadExcl.Xlrd()
 
         url = self.readconfig.get_basedata('url_url')+api
 
-        session =  self.readconfig.get_basedata(session)
+        session =  self.readconfig.get_basedata(sessiondata)
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
-        payload = {}
-        if len(key) > 0:
-            payload["key"]  = key
-        if len(start) > 0:
-            payload["start"]= start
-        if len(end) > 0:
-            payload["end"]= end
+        centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))) 
+        centerid = int(random.sample(centerids,1)[0]) 
 
+        print(url)
+        payload = {
+            "centerId": centerid
+            }
         r = requests.get(url=url,params = payload,headers = headers)
+        print(r.text)
 
         # #处理请求数据到excl用例文件
         # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
         # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
         # excel.save()
-
-        if r.status_code == 200:
-            centeridinfo = self.readdb.GetCenterInfoAllByKey(key,start,end)
-            if centeridinfo is not None and len(r.json()) > 0:
-                responecenterid = []
-                for i in range(len(r.json())):
-                    responecenterid.append(r.json()[i]['id'])
-                    self.assertIn(int(r.json()[i]['id'].upper()),centeridinfo,case_describe + api)
-                self.assertEqual(len(centeridinfo),len(responecenterid),case_describe + api)
-            else:
-                self.assertFalse(r.json(),msg='返回数据有误') 
-                self.assertFalse(centeridinfo,msg='数据库数据有误') 
-        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)
+        
+        # if r.status_code == 200:
+        #     assistantinfo = self.readdb.GetAssistantInfoAllByCenterId(centerid)
+        #     if assistantinfo is not None and len(r.json()) > 0:
+        #         responeassistantid = []
+        #         for i in range(len(r.json())):
+        #             responeassistantid.append(r.json()[i]['id'])
+        #             self.assertIn(int(r.json()[i]['id'].upper()),assistantinfo,case_describe + api)
+        #         self.assertEqual(len(assistantinfo),len(responeassistantid),case_describe + api)
+        #     else:
+        #         self.assertFalse(r.json(),msg='返回数据有误') 
+        #         self.assertFalse(assistantinfo,msg='数据库数据有误') 
+        # self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

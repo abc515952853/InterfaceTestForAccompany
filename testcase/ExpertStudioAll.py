@@ -66,10 +66,9 @@ class ExpertStudioAll(unittest.TestCase):
                 responeexpertstudioid = []
                 for i in range(len(r.json())):
                     responeexpertstudioid.append(r.json()[i]['id'])
-                    self.assertIn(r.json()[i]['id'].upper(),expertstudioinfo,case_describe + api)
+                    self.assertIn(int(r.json()[i]['id'].upper()),expertstudioinfo,case_describe + api)
                 self.assertEqual(len(expertstudioinfo),len(responeexpertstudioid),case_describe + api)
             else:
                 self.assertFalse(r.json(),msg='返回数据有误') 
                 self.assertFalse(expertstudioinfo,msg='数据库数据有误') 
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
-        print(url,payload)
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

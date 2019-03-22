@@ -57,7 +57,7 @@ class AssistantUpdate(unittest.TestCase):
             "phone": phone,
             "centerId": centerid
             }
-        # r = requests.put(url=url,data = json.dumps(payload),headers = headers)
+        r = requests.put(url=url,data = json.dumps(payload),headers = headers)
 
         # # #处理请求数据到excl用例文件
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
@@ -69,7 +69,7 @@ class AssistantUpdate(unittest.TestCase):
             if assistantinfo is not None :
                 self.assertEqual(assistantinfo['name'],name,case_describe + api)
                 self.assertEqual(assistantinfo['phone'],phone,case_describe + api)
-                self.assertEqual(assistantinfo['centerId'],centerid,case_describe + api)
+                self.assertEqual(assistantinfo['center_id'],centerid,case_describe + api)
             else:
                 self.assertTrue(assistantinfo,msg='数据库数据不存在') 
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

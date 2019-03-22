@@ -62,15 +62,24 @@ class AccompanyCreate(unittest.TestCase):
             "scheduleStartTime": scheduleStartTime,
             "scheduleEndTime": scheduleEndTime
             }
-        # r = requests.post(url=url,data = json.dumps(payload),headers = headers)
+        r = requests.post(url=url,data = json.dumps(payload),headers = headers)
 
         # # #处理请求数据到excl用例文件
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
         # # excel.save()
 
-        # # if r.status_code == 200:
-        # #     self.readdb.GetRoles()
-        #       self.readconfig.append_dynamicdata("assistant_id",str(r.json()['id']))
-        # # self.assertEqual(r.status_code,expected_code,case_describe + api)
-        print(url,payload)
+        if r.status_code == 200:
+            Accompanyinfo = self.readdb.GetAccompanyInfoByName(content)
+            if Accompanyinfo is not None:
+                self.assertEqual(Accompanyinfo['patientid'],patientid,case_describe + api)
+                self.assertEqual(Accompanyinfo['content'],content,case_describe + api)
+                self.assertEqual(Accompanyinfo['suggest'],suggest,case_describe + api)
+                self.assertEqual(Accompanyinfo['tags'],tags,case_describe + api)
+                self.assertEqual(Accompanyinfo['images'],images,case_describe + api)
+                self.assertEqual(Accompanyinfo['scheduleStartTime'],scheduleStartTime,case_describe + api)
+                self.assertEqual(Accompanyinfo['scheduleEndTime'],scheduleEndTime,case_describe + api)
+                self.readconfig.append_dynamicdata("accompanys_id",Accompanyinfo['centerid'])
+            else:
+                self.assertTrue(Accompanyinfo,msg='数据库数据不存在') 
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

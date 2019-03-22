@@ -59,11 +59,11 @@ class CenterDetail(unittest.TestCase):
                 self.assertEqual(centerinfo['centerName'],r.json()['centerName'],case_describe + api)
                 self.assertEqual(centerinfo['principalName'],r.json()['principalName'],case_describe + api)
                 self.assertEqual(centerinfo['phone'],r.json()['phone'],case_describe + api)
-                self.assertEqual(centerinfo['username'],r.json()['username'],case_describe + api)
+                # self.assertEqual(centerinfo['user_name'],r.json()['user_name'],case_describe + api)
                 self.assertEqual(centerinfo['county'],r.json()['county'],case_describe + api)
                 self.assertEqual(centerinfo['province'],r.json()['province'],case_describe + api)
                 self.assertEqual(centerinfo['city'],r.json()['city'],case_describe + api)
             else:
                 self.assertTrue(centerinfo,msg='数据库数据不存在') 
                 self.assertTrue(r.json(),msg='数据库数据不存在')
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

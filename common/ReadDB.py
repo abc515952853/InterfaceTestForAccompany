@@ -45,7 +45,7 @@ class Pyodbc:
         return centerinfo
 
     def GetCenterInfoById(self,id):
-        sql = "SELECT center_name,principal_name,phone,province,city,county,username,center_id,agent_number,create_time,remark  FROM center WHERE center_id = '{0}'".format(id)
+        sql = "SELECT center_name,principal_name,phone,province,city,county,user_name,center_id,agent_number,create_time,remark  FROM center WHERE center_id = '{0}'".format(id)
         self.cursor.execute(sql)
         data= self.cursor.fetchone()
         if data is not None:
@@ -57,7 +57,7 @@ class Pyodbc:
                 "province": data[3],
                 "city": data[4],
                 "county": data[5],
-                "username": data[6],
+                "user_name": data[6],
                 "centerid":data[7]
             }
         else:
@@ -86,6 +86,32 @@ class Pyodbc:
             centeridinfo = None
         return centeridinfo
 
+    def GetCenterInfoAll(self):
+        sql = "SELECT center_id from center \
+            ORDER BY create_time desc"
+        self.cursor.execute(sql)
+        data= self.cursor.fetchall()
+        centeridinfo = []
+        if data is not None:
+            for i in range(len(data)):
+                centeridinfo.append(data[i][0])
+        else:
+            centeridinfo = None
+        return centeridinfo
+
+    def GetCenterInfoCount(self,key):
+        if len(key) > 0:
+            sql = "SELECT count(*) from center \
+            WHERE phone like '%{0}%' or principal_name like '%{0}%' or center_name like '%{0}%' ORDER BY create_time desc".format(key)
+        else:
+            sql = "SELECT count(*) from center \
+             ORDER BY create_time desc"
+        self.cursor.execute(sql)
+        data= self.cursor.fetchone()
+        centercount = data[0]
+        return centercount
+        
+
     def GetAssistantInfoByJobnumber(self,jobNumber):
         sql = "SELECT assistant_id,center_id,job_number,name,phone,avatar FROM assistant \
         WHERE job_number = '{0}'".format(jobNumber)
@@ -108,7 +134,7 @@ class Pyodbc:
     def GetAssistantInfoAllByKey(self,key,start,end,centeid = None):
         sql = "SELECT assistant_id from assistant"
         if len(key) > 0:
-            sql = sql + "WHERE phone like '%{0}%' or job_number like '%{0}%' or name like '%{0}%'".format(key)
+            sql = sql + " WHERE phone like '%{0}%' or job_number like '%{0}%' or name like '%{0}%'".format(key)
 
         if len(key)>0 and centeid is not None:
             sql = sql +" and center_id = {0}".format(centeid)
@@ -131,8 +157,21 @@ class Pyodbc:
             assistantidinfo = None
         return assistantidinfo
 
+
+    def GetAssistantInfoAllByCenterId(self,centerid):
+        sql = "SELECT assistant_id from assistant WHERE center_id = {0}".format(centeid)
+        self.cursor.execute(sql)
+        data= self.cursor.fetchall()
+        assistantidinfo = []
+        if data is not None:
+            for i in range(len(data)):
+                assistantidinfo.append(data[i][0])
+        else:
+            assistantidinfo = None
+        return assistantidinfo
+
     def GetAssistanctInfoById(self,id):
-        sql = "SELECT center_id,job_number,name,phone,avatar,patient_numberstate,doctor_number FROM assistant WHERE assistant_id = '{0}'".format(id)
+        sql = "SELECT center_id,job_number,name,phone,avatar,patient_number,state,doctor_number FROM assistant WHERE assistant_id = '{0}'".format(id)
         self.cursor.execute(sql)
         data= self.cursor.fetchone()
         if data is not None:
@@ -142,19 +181,24 @@ class Pyodbc:
                 "name": data[2],
                 "phone": data[3],
                 "avatar": data[4],
-                "state":data[5],
-                "patient_number":data[6],
-                "doctor_number":data[7]
+                "patient_number":data[5],
+                "state":data[6],
+                "doctor_number":data[7],
             }
         else:
             centerinfo = None
         return centerinfo
     
-    def GetAssistantCountByCenterid(self,centerid = None):
-        if centerid is None:
-            sql = "SELECT count(*) from assistant"
-        else:
-            sql = "SELECT count(*) from assistant where center_id={0}".format(centerid)
+    def GetAssistantCountByKey(self,key,centerid = None):
+        sql = "SELECT count(*) from assistant"
+        if len(key) > 0:
+            sql = sql + " WHERE phone like '%{0}%' or job_number like '%{0}%' or name like '%{0}%'".format(key)
+
+        if len(key)>0 and centerid is not None:
+            sql = sql +" and center_id = {0}".format(centerid)
+        elif len(key) ==0 and centerid is not None:
+            sql = sql +" WHERE center_id = {0}".format(centerid)
+
         self.cursor.execute(sql)
         data= self.cursor.fetchone()
         if data is not None:
@@ -195,7 +239,7 @@ class Pyodbc:
             
         if len(key) > 0:
             sql = "SELECT expert_studio_id from expert_studio \
-            WHERE phone like '%{0}%' or job_number like '%{0}%' or name like '%{0}%' ORDER BY create_time desc  LIMIT {1},{2}".format(key,start,end)
+            WHERE phone like '%{0}%' or name like '%{0}%' ORDER BY create_time desc  LIMIT {1},{2}".format(key,start,end)
         else:
             sql = "SELECT expert_studio_id from expert_studio \
             ORDER BY create_time desc  LIMIT {1},{2}".format(key,start,end)
@@ -210,7 +254,7 @@ class Pyodbc:
         return expertstudioidinfo
     
     def GetExpertStudioinfoById(self,id):
-        sql = "SELECT center_name,principal_name,phone,province,city,county,username,center_id,agent_number,create_time,remark,doctor_number  FROM center WHERE center_id = '{0}'".format(id)
+        sql = "SELECT expert_studio_id,phone,name,avatar,hospital,title,province,city,county,expertise,vitae,remark,doctor_number  FROM expert_studio WHERE expert_studio_id = '{0}'".format(id)
         self.cursor.execute(sql)
         data= self.cursor.fetchone()
         if data is not None:
@@ -230,18 +274,20 @@ class Pyodbc:
             "doctor_number":data[12]
             }
         else:
-            centerinfo = None
-        return centerinfo
+            expertstudioinfo = None
+        return expertstudioinfo
 
-    def GetExpertstudioCount(self):
-        sql = "SELECT count(*) from expert_studio"
+    def GetExpertstudioCount(self,key):
+        if len(key) > 0:
+            sql = "SELECT count(*) from expert_studio \
+            WHERE phone like '%{0}%'  or name like '%{0}%' ORDER BY create_time desc".format(key)
+        else:
+            sql = "SELECT count(*) from expert_studio \
+             ORDER BY create_time desc"
         self.cursor.execute(sql)
         data= self.cursor.fetchone()
-        if data is not None:
-            expertstudiocountinfo = data[0]
-        else:
-            expertstudiocountinfo = None
-        return expertstudiocountinfo
+        expertstudiocount = data[0]
+        return expertstudiocount
 
     def GetDoctorinfoInfoByName(self,name):
         sql = "SELECT doctor_id,name,phone,idCard,certificate,avatar,hospital,title,department,expertise,expertStudioId,province,city,county,vitae FROM doctor \
@@ -253,7 +299,7 @@ class Pyodbc:
             "doctor_id":data[0],
             "name": data[1],
             "phone": data[2],
-            "idCard": data[3],s
+            "idCard": data[3],
             "certificate": data[4],
             "avatar": data[5],
             "hospital": data[6],
@@ -270,7 +316,7 @@ class Pyodbc:
             doctorinfo = None
         return doctorinfo
 
-    def GetDoctorInfoAllByKey(key,start,end):
+    def GetDoctorInfoAllByKey(self,key,start,end):
         if len(start) == 0:
             start = '0'
         if len(end) == 0:
@@ -280,7 +326,7 @@ class Pyodbc:
             sql = "SELECT doctor_id from doctor \
             WHERE expertise like '%{0}%' or name like '%{0}%' or phone like '%{0}%' ORDER BY create_time desc  LIMIT {1},{2}".format(key,start,end)
         else:
-            sql = "SELECT doctor_id from center \
+            sql = "SELECT doctor_id from doctor \
             ORDER BY create_time desc  LIMIT {1},{2}".format(key,start,end)
         self.cursor.execute(sql)
         data= self.cursor.fetchall()
@@ -293,36 +339,37 @@ class Pyodbc:
         return doctoridinfo
     
     def GetDoctorInfoById(self,id):
-        sql = "SELECT name,phone,idCard,certificate,avatar,hospital,title,department,expertise,expertStudioId,province,city,county,vitae  FROM doctorinfo \
+        sql = "SELECT doctor_id,name,phone,id_Card,certificate,avatar,hospital,title,department,expertise,expert_Studio_Id,province,city,county,vitae  FROM doctor \
         WHERE doctor_id = '{0}'".format(id)
         self.cursor.execute(sql)
+        print(sql)
         data= self.cursor.fetchone()
         if data is not None:
             doctorinfo  = {
-                "name": name,
-                "phone": phone,
-                "idCard": idCard,
-                "certificate": certificate,
-                "avatar": avatar,
-                "hospital": hospital,
-                "title": title,
-                "department": department,
-                "expertise": expertise,
-                "expertStudioId": experstudioid,
-                "province": province,
-                "city": city,
-                "county": county,
-                "vitae": vitae
+                "doctor_id":data[0],
+                "name": data[1],
+                "phone": data[2],
+                "idCard": data[3],
+                "certificate": data[4],
+                "avatar": data[5],
+                "hospital": data[6],
+                "title": data[7],
+                "department": data[8],
+                "expertise": data[9],
+                "expertStudioId": data[10],
+                "province": data[11],
+                "city": data[12],
+                "county": data[13],
+                "vitae": data[14]
             }
         else:
             doctorinfo = None
         return doctorinfo
 
-    def GetDoctorCountByCenterid(self,expertstudioid = None):
-        if expertstudioids is None:
-            sql = "SELECT count(*) from doctor"
-        else:
-            sql = "SELECT count(*) from doctor where expert_studio_id={0}".format(centerid)
+    def GetDoctorCount(self,key):
+        sql ="SELECT count(*) from doctor"
+        if len(key) > 0:
+            sql = sql + " WHERE expertise like '%{0}%' or name like '%{0}%' or phone like '%{0}%' ORDER BY create_time desc".format(key)
         self.cursor.execute(sql)
         data= self.cursor.fetchone()
         if data is not None:
@@ -341,7 +388,7 @@ class Pyodbc:
             "salesman_id":data[0],
             "user_id": data[1],
             "center_id": data[2],
-            "name": data[3],s
+            "name": data[3],
             "phone": data[4],
             "agent_number": data[5],
             "state": data[6],
@@ -538,6 +585,50 @@ class Pyodbc:
         else:
             patientcountinfo = None
         return patientcountinfo
+
+    def GetAccompanyInfoByName(self,content):
+        sql = "SELECT acconpany_id,patient_id,schedule_id,name,content,suggest,tags,images,scheduleStartTime,scheduleEndTime FROM accompany \
+        WHERE content ='{0}'".format(content)
+        self.cursor.execute(sql)
+        data= self.cursor.fetchone()
+        if data is not None:
+            acconpanyinfo  = {
+                "acconpanyid":data[0],
+                "patientid": datap[1],
+                "scheduleid":datap[2],
+                "name":datap[3],
+                "content": datap[4],
+                "suggest": datap[5],
+                "tags": datap[6],
+                "images": datap[7],
+                "scheduleStartTime": datap[8],
+                "scheduleEndTime": datap[9]
+            }
+        else:
+            acconpanyinfo = None
+        return acconpanyinfo
+
+    def GetAccompanyinfoById(self,id):
+        sql = "SELECT acconpany_id,patient_id,schedule_id,name,content,suggest,tags,images,scheduleStartTime,scheduleEndTime FROM accompany \
+        WHERE acconpany_id ='{0}'".format(id)
+        self.cursor.execute(sql)
+        data= self.cursor.fetchone()
+        if data is not None:
+            acconpanyinfo  = {
+                "acconpanyid":data[0],
+                "patientid": data[1],
+                "scheduleid":data[2],
+                "name":data[3],
+                "content": data[4],
+                "suggest": data[5],
+                "tags": data[6],
+                "images": data[7],
+                "scheduleStartTime": data[8],
+                "scheduleEndTime": data[9]
+            }
+        else:
+            acconpanyinfo = None
+        return acconpanyinfo
         
         
 

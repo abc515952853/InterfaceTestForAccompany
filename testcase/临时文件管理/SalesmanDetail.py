@@ -8,12 +8,12 @@ import uuid
 import random
 
 
-sheet_name = "SalesmanCount"
+sheet_name = "SalesmanDetail"
 
 excel = ReadExcl.Xlrd()
 
 @ddt.ddt
-class SalesmanCount(unittest.TestCase):
+class SalesmanDetail(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
@@ -31,16 +31,19 @@ class SalesmanCount(unittest.TestCase):
 
 
     @ddt.data(*excel.get_xls_next(sheet_name))
-    def test_SalesmanCount(self,data):
-        api = str(data['api']).format(self.readconfig.get_basedata('api_version'))
+    def test_SalesmanDetail(self,data):
+        salesmanids = list(map(str,str(self.readconfig.get_dynamicdata("salesmans_id")).split(','))) 
+        salesmanid = int(random.sample(salesmanids,1)[0]) 
+
+        api = str(data['api']).format(self.readconfig.get_basedata('api_version'),salesmanid)
         case_id = str(data['case_id'])
-        sessiondata = str(data['session'])
+        session = str(data['session'])
         case_describe = str(data['case_describe'])
         expected_code = int(data['expected_code'])
 
         url = self.readconfig.get_basedata('url_url')+api
 
-        session =  self.readconfig.get_basedata(sessiondata)
+        session =  self.readconfig.get_basedata(session)
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
         r = requests.get(url=url,headers = headers)
@@ -51,15 +54,13 @@ class SalesmanCount(unittest.TestCase):
         # # excel.save()
 
         if r.status_code == 200:
-            if sessiondata == 'session_system':
-                centerids = int(list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))))
-                centerid = int(random.sample(centerids,1)[0]) 
-                salesmancountinfo = self.readdb.GetSalesmanCountByCenterid(centerid)
+            salesmaninfo = self.readdb.GetSalesmanInfoById(r.json()['id'])
+            if salesmaninfo is not None and len(r.json()) > 0:
+                self.assertEqual(salesmaninfo['center_id'],r.json()['center_id'],case_describe + api)
+                self.assertEqual(salesmaninfo['name'],r.json()['name'],case_describe + api)
+                self.assertEqual(salesmaninfo['phone'],r.json()['phone'],case_describe + api)
+                self.assertEqual(salesmaninfo['username'],r.json()['username'],case_describe + api)
             else:
-                salesmancountinfo = self.readdb.GetSalesmanCountByCenterid()
-            if salesmancountinfo is not None and len(r.json()) > 0:
-                self.assertEqual(salesmancountinfo,r.json(),case_describe + api)
-            else:
-                self.assertTrue(salesmancountinfo,msg='数据库数据不存在') 
+                self.assertTrue(salesmaninfo,msg='数据库数据不存在') 
                 self.assertTrue(r.json(),msg='数据库数据不存在')
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

@@ -5,13 +5,14 @@ import ReadConfig
 import requests
 import json
 import uuid 
+import random
 
-sheet_name = "MemberCreate"
+sheet_name = "SalesmanCreate"
 
 excel = ReadExcl.Xlrd()
 
 @ddt.ddt
-class MemberCreate(unittest.TestCase):
+class SalesmanCreate(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
@@ -28,19 +29,19 @@ class MemberCreate(unittest.TestCase):
         pass
 
     @ddt.data(*excel.get_xls_next(sheet_name))
-    def test_MemberCreate(self,data):
+    def test_SalesmanCreate(self,data):
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'))
         case_id = str(data['case_id'])
         session = str(data['session'])
         case_describe = str(data['case_describe'])
         expected_code = int(data['expected_code'])
 
-
+        centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))) 
+        centerid = int(random.sample(centerids,1)[0]) 
         name = str(data['name'])
         phone = str(data['phone'])
-        startTime = str(data['startTime'])
-        endTime = str(data['endTime'])
-        state = str(data['state'])
+        password = str(data['password'])
+        username = str(data['username'])
 
         # # excel = ReadExcl.Xlrd()
 
@@ -50,11 +51,11 @@ class MemberCreate(unittest.TestCase):
         requestid = str(uuid.uuid1())
         headers = {'Content-Type': "application/json",'Authorization':session,"x-requestid":requestid}
         payload ={
+            "centerId": centerid,
             "name": name,
             "phone": phone,
-            "startTime":startTime,
-            "endTime":endTime,
-            "state":state
+            "password": password,
+            "username": username,
             }
         r = requests.post(url=url,data = json.dumps(payload),headers = headers)
 
@@ -64,14 +65,13 @@ class MemberCreate(unittest.TestCase):
         # # excel.save()
 
         if r.status_code == 200:
-            memberinfo = self.readdb.GetmemberInfoByPhone(phone)
-            if memberinfo is not None:
-                self.assertEqual(memberinfo['name'],name,case_describe + api)
-                self.assertEqual(memberinfo['phone'],phone,case_describe + api)
-                self.assertEqual(memberinfo['startTime'],startTime,case_describe + api)
-                self.assertEqual(memberinfo['endTime'],endTime,case_describe + api)
-                self.assertEqual(memberinfo['state'],state,case_describe + api)
-                self.readconfig.append_dynamicdata("members_id",memberinfo['member_id'])
+            salesmaninfo = self.readdb.GetSalesmanInfoByName(name)
+            if assistantinfo is not None:
+                self.assertEqual(salesmaninfo['center_id'],centerId,case_describe + api)
+                self.assertEqual(salesmaninfo['name'],name,case_describe + api)
+                self.assertEqual(salesmaninfo['phone'],phone,case_describe + api)
+                self.assertEqual(salesmaninfo['username'],username,case_describe + api)
+                self.readconfig.append_dynamicdata("salesmans_id",salesmaninfo['salesman_id']))
             else:
-                self.assertTrue(memberinfo,msg='数据库数据不存在') 
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+                self.assertTrue(centerinfo,msg='数据库数据不存在') 
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

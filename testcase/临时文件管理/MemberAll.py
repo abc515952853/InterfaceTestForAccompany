@@ -4,15 +4,15 @@ from common import ReadExcl,ReadDB
 import ReadConfig 
 import requests
 import json
-import uuid 
+import uuid
 import random
 
-sheet_name = "PatientAll"
+sheet_name = "MemberAll"
 
 excel = ReadExcl.Xlrd()
 
 @ddt.ddt
-class PatientAll(unittest.TestCase):
+class MemberAll(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
@@ -29,7 +29,7 @@ class PatientAll(unittest.TestCase):
         pass
 
     @ddt.data(*excel.get_xls_next(sheet_name))
-    def test_PatientAll(self,data):
+    def test_MemberAll(self,data):
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'))
         case_id = str(data['case_id'])
         sessiondata = str(data['session'])
@@ -63,18 +63,18 @@ class PatientAll(unittest.TestCase):
 
         if r.status_code == 200:
             if sessiondata == 'session_system':
-                patientinfo = self.readdb.GetPatientInfoAllByKey(key,start,end)
+                memberinfo = self.readdb.GetMenberInfoAllByKey(key,start,end)
             else:
                 centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(',')))
                 centerid = int(random.sample(centerids,1)[0]) 
-                patientinfo = self.readdb.GetPatientInfoAllByKey(key,start,end,centerid)
-            if patientinfo is not None and len(r.json()) > 0:
-                responepatientid = []
+                memberinfo = self.readdb.GetMenberInfoAllByKey(key,start,end,centerid)
+            if memberinfo is not None and len(r.json()) > 0:
+                responememberid = []
                 for i in range(len(r.json())):
-                    responepatientid.append(r.json()[i]['id'])
-                    self.assertIn(r.json()[i]['id'].upper(),patientinfo,case_describe + api)
-                self.assertEqual(len(patientinfo),len(responepatientid),case_describe + api)
+                    responememberid.append(r.json()[i]['id'])
+                    self.assertIn(r.json()[i]['id'].upper(),memberinfo,case_describe + api)
+                self.assertEqual(len(memberinfo),len(responememberid),case_describe + api)
             else:
                 self.assertFalse(r.json(),msg='返回数据有误') 
-                self.assertFalse(patientinfo,msg='数据库数据有误') 
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+                self.assertFalse(memberinfo,msg='数据库数据有误') 
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

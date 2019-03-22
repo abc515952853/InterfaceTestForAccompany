@@ -89,4 +89,4 @@ class PatientCreate(unittest.TestCase):
                 self.readconfig.append_dynamicdata("patients_id",patientinfo['patient_id'])
             else:
                 self.assertTrue(patientinfo,msg='数据库数据不存在') 
-        self.assertEqual(r.status_code,expected_code,case_describe + api)
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)
