@@ -68,7 +68,7 @@ class Pyodbc:
         if len(start) == 0:
             start = '0'
         if len(end) == 0:
-            end = '19'
+            end = '100'
             
         if len(key) > 0:
             sql = "SELECT center_id from center \
@@ -144,7 +144,7 @@ class Pyodbc:
         if len(start) == 0:
             start = '0'
         if len(end) == 0:
-            end = '19'
+            end = '100'
 
         sql = sql+ " ORDER BY create_time desc  LIMIT {0},{1}".format(start,end)
         self.cursor.execute(sql)
@@ -235,7 +235,7 @@ class Pyodbc:
         if len(start) == 0:
             start = '0'
         if len(end) == 0:
-            end = '19'
+            end = '100'
             
         if len(key) > 0:
             sql = "SELECT expert_studio_id from expert_studio \
@@ -320,7 +320,7 @@ class Pyodbc:
         if len(start) == 0:
             start = '0'
         if len(end) == 0:
-            end = '19'
+            end = '100'
             
         if len(key) > 0:
             sql = "SELECT doctor_id from doctor \
@@ -401,7 +401,7 @@ class Pyodbc:
     def GetSalesmanInfoAllByKey(self,key,start,end,centeid = None):
         sql = "SELECT salesman_id from salesman"
         if len(key) > 0:
-            sql = sql + "WHERE phone like '%{0}%' or name like '%{0}%'".format(key)
+            sql = sql + " WHERE phone like '%{0}%' or name like '%{0}%'".format(key)
 
         if len(key)>0 and centeid is not None:
             sql = sql +" and center_id = {0}".format(centeid)
@@ -411,9 +411,10 @@ class Pyodbc:
         if len(start) == 0:
             start = '0'
         if len(end) == 0:
-            end = '19'
+            end = '100'
 
         sql = sql+ " ORDER BY create_time desc  LIMIT {0},{1}".format(start,end)
+
         self.cursor.execute(sql)
         data= self.cursor.fetchall()
         salesmanidinfo = []
@@ -423,6 +424,22 @@ class Pyodbc:
         else:
             salesmanidinfo = None
         return salesmanidinfo
+
+    def GetSalesmanInfoAllByCenter(self,centeid = None):
+        sql = "SELECT salesman_id from salesman"
+        if centeid is not None:
+            sql = sql +" WHERE center_id = {0}".format(centeid)
+        self.cursor.execute(sql)
+        data= self.cursor.fetchall()
+        salesmanidinfo = []
+        if data is not None:
+            for i in range(len(data)):
+                salesmanidinfo.append(data[i][0])
+        else:
+            salesmanidinfo = None
+        return salesmanidinfo
+
+        
 
     def GetSalesmanInfoById(self,id):
         sql = "SELECT salesman_id,user_id,center_id,name,phone,agent_number,state,qrcode FROM salesman \
@@ -490,7 +507,7 @@ class Pyodbc:
         if len(start) == 0:
             start = '0'
         if len(end) == 0:
-            end = '19'
+            end = '100'
 
         sql = sql+ " ORDER BY create_time desc  LIMIT {0},{1}".format(start,end)
         self.cursor.execute(sql)
@@ -538,7 +555,7 @@ class Pyodbc:
         if len(start) == 0:
             start = '0'
         if len(end) == 0:
-            end = '19'
+            end = '100'
 
         sql = sql+ " ORDER BY create_time desc  LIMIT {0},{1}".format(start,end)
         self.cursor.execute(sql)

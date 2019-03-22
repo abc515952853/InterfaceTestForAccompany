@@ -10,10 +10,11 @@
 #########AssistantAll1
 ###AssistantDatail
 ###AssistantUpdate
-AssistantStateUpdate
+###AssistantStateUpdate
 ###AssistantCount
 #SalesmanCreate
-#SalesmanAll
+###SalesmanAll
+SalesmanAll1
 #SalesmanDetail
 #SalesmanUpdate
 #SalesmanStateUpdate

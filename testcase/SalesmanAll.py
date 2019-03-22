@@ -4,16 +4,15 @@ from common import ReadExcl,ReadDB
 import ReadConfig 
 import requests
 import json
-import uuid 
+import uuid
 import random
 
-
-sheet_name = "AssistantCount"
+sheet_name = "SalesmanAll"
 
 excel = ReadExcl.Xlrd()
 
 @ddt.ddt
-class AssistantCount(unittest.TestCase):
+class SalesmanAll(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.readdb = ReadDB.Pyodbc()
@@ -29,16 +28,19 @@ class AssistantCount(unittest.TestCase):
     def tearDown(self):
         pass
 
-
     @ddt.data(*excel.get_xls_next(sheet_name))
-    def test_AssistantCount(self,data):
+    def test_SalesmanAll(self,data):
         api = str(data['api']).format(self.readconfig.get_basedata('api_version'))
         case_id = str(data['case_id'])
         sessiondata = str(data['session'])
         case_describe = str(data['case_describe'])
         expected_code = int(data['expected_code'])
 
-        key =str(data['key'])
+        key = str(data['key'])
+        start = str(data['start'])
+        end = str(data['end'])
+        
+        # # excel = ReadExcl.Xlrd()
 
         url = self.readconfig.get_basedata('url_url')+api
 
@@ -48,6 +50,10 @@ class AssistantCount(unittest.TestCase):
         payload = {}
         if len(key) > 0:
             payload["key"]  = key
+        if len(start) > 0:
+            payload["start"]= start
+        if len(end) > 0:
+            payload["end"]= end
         r = requests.get(url=url,params = payload,headers = headers)
 
         # # #处理请求数据到excl用例文件
@@ -57,13 +63,17 @@ class AssistantCount(unittest.TestCase):
 
         if r.status_code == 200:
             if sessiondata == 'session_system':
-                assistantcountinfo = self.readdb.GetAssistantCountByKey(key)
+                salesmaninfo = self.readdb.GetSalesmanInfoAllByKey(key,start,end)
             else:
                 centerid = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(',')))[-1]
-                assistantcountinfo = self.readdb.GetAssistantCountByKey(key,centerid)
-            if assistantcountinfo is not None and r.json() > 0:
-                self.assertEqual(assistantcountinfo,r.json(),case_describe + api)
+                salesmaninfo = self.readdb.GetSalesmanInfoAllByKey(key,start,end,centerid)
+            if salesmaninfo is not None and len(r.json()) > 0:
+                responesalesmanid = []
+                for i in range(len(r.json())):
+                    responesalesmanid.append(r.json()[i]['id'])
+                    self.assertIn(int(r.json()[i]['id'].upper()),salesmaninfo,case_describe + api)
+                self.assertEqual(len(salesmaninfo),len(responesalesmanid),case_describe + api)
             else:
-                self.assertTrue(assistantcountinfo,msg='数据库数据不存在') 
-                self.assertTrue(r.json(),msg='数据库数据不存在')
+                self.assertFalse(r.json(),msg='返回数据有误') 
+                self.assertFalse(salesmaninfo,msg='数据库数据有误') 
         self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

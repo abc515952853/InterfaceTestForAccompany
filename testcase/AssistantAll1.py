@@ -46,27 +46,26 @@ class AssistantAll1(unittest.TestCase):
         centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))) 
         centerid = int(random.sample(centerids,1)[0]) 
 
-        print(url)
         payload = {
             "centerId": centerid
             }
         r = requests.get(url=url,params = payload,headers = headers)
-        print(r.text)
+
 
         # #处理请求数据到excl用例文件
         # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))
         # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_msg"],r.text,excel.set_color())
         # excel.save()
         
-        # if r.status_code == 200:
-        #     assistantinfo = self.readdb.GetAssistantInfoAllByCenterId(centerid)
-        #     if assistantinfo is not None and len(r.json()) > 0:
-        #         responeassistantid = []
-        #         for i in range(len(r.json())):
-        #             responeassistantid.append(r.json()[i]['id'])
-        #             self.assertIn(int(r.json()[i]['id'].upper()),assistantinfo,case_describe + api)
-        #         self.assertEqual(len(assistantinfo),len(responeassistantid),case_describe + api)
-        #     else:
-        #         self.assertFalse(r.json(),msg='返回数据有误') 
-        #         self.assertFalse(assistantinfo,msg='数据库数据有误') 
-        # self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)
+        if r.status_code == 200:
+            assistantinfo = self.readdb.GetAssistantInfoAllByCenterId(centerid)
+            if assistantinfo is not None and len(r.json()) > 0:
+                responeassistantid = []
+                for i in range(len(r.json())):
+                    responeassistantid.append(r.json()[i]['id'])
+                    self.assertIn(int(r.json()[i]['id'].upper()),assistantinfo,case_describe + api)
+                self.assertEqual(len(assistantinfo),len(responeassistantid),case_describe + api)
+            else:
+                self.assertFalse(r.json(),msg='返回数据有误') 
+                self.assertFalse(assistantinfo,msg='数据库数据有误') 
+        self.assertEqual(r.status_code,expected_code,case_describe + api + r.text)

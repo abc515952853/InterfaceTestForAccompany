@@ -65,8 +65,7 @@ class AssistantAll(unittest.TestCase):
             if sessiondata == 'session_system':
                 assistantinfo = self.readdb.GetAssistantInfoAllByKey(key,start,end)
             else:
-                centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(',')))
-                centerid = int(random.sample(centerids,1)[0]) 
+                centerid = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(',')))[-1] 
                 assistantinfo = self.readdb.GetAssistantInfoAllByKey(key,start,end,centerid)
             if assistantinfo is not None and len(r.json()) > 0:
                 responeassistantid = []
