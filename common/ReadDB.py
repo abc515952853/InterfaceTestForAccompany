@@ -497,7 +497,7 @@ class Pyodbc:
     def GetMenberInfoAllByKey(self,key,start,end,centeid = None):
         sql = "SELECT member_id from member"
         if len(key) > 0:
-            sql = sql + "WHERE phone like '%{0}%' or name like '%{0}%'".format(key)
+            sql = sql + " WHERE phone like '%{0}%' or name like '%{0}%'".format(key)
 
         if len(key)>0 and centeid is not None:
             sql = sql +" and center_id = {0}".format(centeid)
@@ -510,6 +510,8 @@ class Pyodbc:
             end = '100'
 
         sql = sql+ " ORDER BY create_time desc  LIMIT {0},{1}".format(start,end)
+
+        print(sql)
         self.cursor.execute(sql)
         data= self.cursor.fetchall()
         memberidinfo = []

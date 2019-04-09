@@ -52,12 +52,11 @@ class SalesmanCount(unittest.TestCase):
 
         if r.status_code == 200:
             if sessiondata == 'session_system':
-                centerids = int(list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(','))))
-                centerid = int(random.sample(centerids,1)[0]) 
-                salesmancountinfo = self.readdb.GetSalesmanCountByCenterid(centerid)
-            else:
                 salesmancountinfo = self.readdb.GetSalesmanCountByCenterid()
-            if salesmancountinfo is not None and len(r.json()) > 0:
+            else:
+                centerid = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(',')))[-1]
+                salesmancountinfo = self.readdb.GetSalesmanCountByCenterid(centerid)
+            if salesmancountinfo is not None and r.json() > 0:
                 self.assertEqual(salesmancountinfo,r.json(),case_describe + api)
             else:
                 self.assertTrue(salesmancountinfo,msg='数据库数据不存在') 

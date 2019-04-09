@@ -65,14 +65,13 @@ class MemberAll(unittest.TestCase):
             if sessiondata == 'session_system':
                 memberinfo = self.readdb.GetMenberInfoAllByKey(key,start,end)
             else:
-                centerids = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(',')))
-                centerid = int(random.sample(centerids,1)[0]) 
+                centerid = list(map(str,str(self.readconfig.get_dynamicdata("centers_id")).split(',')))[-1]
                 memberinfo = self.readdb.GetMenberInfoAllByKey(key,start,end,centerid)
             if memberinfo is not None and len(r.json()) > 0:
                 responememberid = []
                 for i in range(len(r.json())):
                     responememberid.append(r.json()[i]['id'])
-                    self.assertIn(r.json()[i]['id'].upper(),memberinfo,case_describe + api)
+                    self.assertIn(int(r.json()[i]['id'].upper()),memberinfo,case_describe + api)
                 self.assertEqual(len(memberinfo),len(responememberid),case_describe + api)
             else:
                 self.assertFalse(r.json(),msg='返回数据有误') 

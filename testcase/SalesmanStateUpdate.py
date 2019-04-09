@@ -51,7 +51,7 @@ class SalesmanStateUpdate(unittest.TestCase):
         payload ={
             "state": state
             }
-        # r = requests.put(url=url,data = json.dumps(payload),headers = headers)
+        r = requests.put(url=url,data = json.dumps(payload),headers = headers)
 
         # # #处理请求数据到excl用例文件
         # # excel.set_cell(sheet_name,int(data["case_id"]),excel.get_sheet_colname(sheet_name)["result_code"],r.status_code,excel.set_color(r.status_code))

@@ -14,11 +14,11 @@
 ###AssistantCount
 #SalesmanCreate
 ###SalesmanAll
-SalesmanAll1
-#SalesmanDetail
-#SalesmanUpdate
-#SalesmanStateUpdate
-#SalesmanCount
+###SalesmanAll1
+###SalesmanDetail
+###SalesmanUpdate
+###SalesmanStateUpdate
+###SalesmanCount
 #ExpertStudioCreate
 ###ExpertStudioAll
 #ExpertStudioDetail
@@ -30,7 +30,7 @@ SalesmanAll1
 ###DoctorCount
 ###DoctorUpdate
 #MemberCreate
-#MemberAll
+###MemberAll
 #PatientCreate
 #PatientAll
 #PatientCount

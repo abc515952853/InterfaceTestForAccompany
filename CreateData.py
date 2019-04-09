@@ -8,10 +8,10 @@ import datetime
 class Pyodbc:
     def __init__(self,):
         driver = 'MySQL ODBC 8.0 ANSI Driver'  # 因版本不同而异
-        DBIp = '101.37.179.99'
-        DBPort = 3306
+        DBIp = '127.0.0.1'
+        DBPort = 33061
         DBUserName = 'root'
-        DBPassWord = 'djejeUJ3qj^su22'
+        DBPassWord = 'I5show@181211'
         DBName1= 'accompanying'
         DBName2= 'accompanying_identity'
         self.conn1 = pyodbc.connect(driver=driver,server=DBIp,port = DBPort,user=DBUserName, password=DBPassWord, database=DBName1)
@@ -22,6 +22,7 @@ class Pyodbc:
 
 
         self.peibanid = ['e73358d1-369a-45a0-8c4e-e5f445a21769','c542ab7d-89c4-438e-b500-0ac67f093c0f','17d720c0-b3f2-4a7a-95f8-9071cc891536']
+        self.Scheduld_Userid = ['7990b3d0-4c8e-11e9-91a9-f07959ddf195','79825bba-4c8e-11e9-9520-f07959ddf195']
 
 
     def CreateCenter(self):
@@ -29,7 +30,7 @@ class Pyodbc:
         t = time.time()
         num = str(int(round(t)))[-6:]						
         name = '沈斌'+num
-        centername = '运营中心'+ num
+        centername = '测试专用运营中心'+ num
         username = 'yyzx' + num
         phone = '18511'+num
         sql = "INSERT INTO `AspNetUsers`(`Id`, `UserName`,`EmailConfirmed`, `PhoneNumberConfirmed`, `TwoFactorEnabled`,`LockoutEnabled`, `AccessFailedCount`,`PhoneNumber`,`SecurityStamp`,`ConcurrencyStamp`) VALUES ('{0}','{1}',0,1,1,0,0,'{2}','WBOKYTVIRSA3KD4KEF45YAJSUM7Y47G2','70d1970c-4c46-11e9-bbba-0242ac144502')".format(userid,phone,phone)
@@ -46,7 +47,7 @@ class Pyodbc:
         self.cursor1.execute(sql)
         self.conn1.commit()
 
-        sql = "INSERT INTO `center`(`user_id`, `center_name`, `principal_name`, `phone`, `province`, `city`, `county`, `agent_number`,`username`)\
+        sql = "INSERT INTO `center`(`user_id`, `center_name`, `principal_name`, `phone`, `province`, `city`, `county`, `agent_number`,`user_name`)\
          VALUES ('{0}','{1}','{2}','{3}','浙江省','杭州市','滨江区','{4}','{5}')".format(userid,centername,name,phone,uuid.uuid1(),username)
 
         self.cursor1.execute(sql)
@@ -62,7 +63,7 @@ class Pyodbc:
         t = time.time()
         num = str(int(round(t)))[-6:]						
         name = '沈斌'+num
-        assistantname = '医生助理'+ num
+        assistantname = '测试专用医生助理'+ num
         phone = '18502'+num
         sql = "INSERT INTO `AspNetUsers`(`Id`, `UserName`,`EmailConfirmed`, `PhoneNumberConfirmed`, `TwoFactorEnabled`,`LockoutEnabled`, `AccessFailedCount`,`PhoneNumber`,`SecurityStamp`,`ConcurrencyStamp`) VALUES ('{0}','{1}',0,1,1,0,0,'{2}','WBOKYTVIRSA3KD4KEF45YAJSUM7Y47G2','70d1970c-4c46-11e9-bbba-0242ac144502')".format(userid,phone,phone)
         self.cursor2.execute(sql)
@@ -93,7 +94,7 @@ class Pyodbc:
         t = time.time()
         num = str(int(round(t)))[-6:]							
         name = '沈斌'+num
-        Salesmanname = '业务员'+ num
+        Salesmanname = '测试专用业务员'+ num
         phone = '18503'+num
         sql = "INSERT INTO `AspNetUsers`(`Id`, `UserName`,`EmailConfirmed`, `PhoneNumberConfirmed`, `TwoFactorEnabled`,`LockoutEnabled`, `AccessFailedCount`,`PhoneNumber`,`SecurityStamp`,`ConcurrencyStamp`) VALUES ('{0}','{1}',0,1,1,0,0,'{2}','WBOKYTVIRSA3KD4KEF45YAJSUM7Y47G2','70d1970c-4c46-11e9-bbba-0242ac144502')".format(userid,phone,phone)
         self.cursor2.execute(sql)
@@ -124,7 +125,7 @@ class Pyodbc:
         t = time.time()
         num = str(int(round(t)))[-6:]							
         name = '沈斌'+num
-        Professorname = '专家'+ num
+        Professorname = '测试专用专家'+ num
         phone = '13801'+num
         sql = "INSERT INTO `AspNetUsers`(`Id`, `UserName`,`EmailConfirmed`, `PhoneNumberConfirmed`, `TwoFactorEnabled`,`LockoutEnabled`, `AccessFailedCount`,`PhoneNumber`,`SecurityStamp`,`ConcurrencyStamp`) VALUES ('{0}','{1}',0,1,1,0,0,'{2}','WBOKYTVIRSA3KD4KEF45YAJSUM7Y47G2','70d1970c-4c46-11e9-bbba-0242ac144502')".format(userid,phone,phone)
         self.cursor2.execute(sql)
@@ -154,7 +155,7 @@ class Pyodbc:
         t = time.time()
         num = str(int(round(t)))[-6:]							
         name = '沈斌'+num
-        doctorname = '医生'+ num
+        doctorname = '测试专用医生'+ num
         phone = '13802'+num
         sql = "INSERT INTO `AspNetUsers`(`Id`, `UserName`,`EmailConfirmed`, `PhoneNumberConfirmed`, `TwoFactorEnabled`,`LockoutEnabled`, `AccessFailedCount`,`PhoneNumber`,`SecurityStamp`,`ConcurrencyStamp`) VALUES ('{0}','{1}',0,1,1,0,0,'{2}','WBOKYTVIRSA3KD4KEF45YAJSUM7Y47G2','70d1970c-4c46-11e9-bbba-0242ac144502')".format(userid,phone,phone)
         self.cursor2.execute(sql)
@@ -170,7 +171,7 @@ class Pyodbc:
         self.conn1.commit()
 
         sql = "INSERT INTO `doctor`(`user_id`, `expert_studio_id`, `name`, `phone`, `id_card`, `patients_number`)\
-         VALUES ('{0}','{1}','{2}','{3}','330102198909286523',0)".format(userid,86,doctorname,phone)
+         VALUES ('{0}','{1}','{2}','{3}','330102198909286523',0)".format(userid,self.ProfessorId,doctorname,phone)
 
         self.cursor1.execute(sql)
 
@@ -185,8 +186,9 @@ class Pyodbc:
         num = str(int(round(t)))[-6:]						
         name = '会员患者'+num
         doctorname = '会员患者'+ num
-        phone = '12702'+num
-        sql = "INSERT INTO `AspNetUsers`(`Id`, `UserName`,`EmailConfirmed`, `PhoneNumberConfirmed`, `TwoFactorEnabled`,`LockoutEnabled`, `AccessFailedCount`,`PhoneNumber`,`SecurityStamp`,`ConcurrencyStamp`) VALUES ('{0}','{1}',0,1,1,0,0,'{2}','WBOKYTVIRSA3KD4KEF45YAJSUM7Y47G2','70d1970c-4c46-11e9-bbba-0242ac144502')".format(userid,phone,phone)
+        phone = '17511'+num
+        sql = "INSERT INTO `AspNetUsers`(`Id`, `UserName`,`EmailConfirmed`, `PhoneNumberConfirmed`, `TwoFactorEnabled`,`LockoutEnabled`, `AccessFailedCount`,`PhoneNumber`,`SecurityStamp`,`ConcurrencyStamp`) \
+        VALUES ('{0}','{1}',0,1,1,0,0,'{2}','WBOKYTVIRSA3KD4KEF45YAJSUM7Y47G2','70d1970c-4c46-11e9-bbba-0242ac144502')".format(userid,phone,phone)
         self.cursor2.execute(sql)
         self.conn2.commit()
 
@@ -200,14 +202,14 @@ class Pyodbc:
         self.conn1.commit()
 
         sql = "INSERT INTO `member`(`user_id`, `center_id`, `salesman_id`, `name`, `phone`, `start_time`, `end_time`, `create_time`, `state`,`pause_operator_id`, `pause_operator_name`) \
-        VALUES('{0}',112,76,'{1}','{2}','2019-03-21 02:51:21','2020-03-21 02:51:21','2019-03-21 02:51:21',1,'11','11')".format(userid,name,phone)
+        VALUES('{0}',113,86,'{1}','{2}','2019-03-21 02:51:21','2020-03-21 02:51:21','2019-03-21 02:51:21',1,'11','11')".format(userid,name,phone)
         self.cursor1.execute(sql)
         self.cursor1.execute('SELECT @@IDENTITY')
         self.MemberId = self.cursor1.fetchone()[0]
         self.conn1.commit()
 
         sql = "INSERT INTO `patient`(`member_id`, `doctor_id`, `assistant_id`, `name`, `phone`, `gender`, `birthday`,`province`, `city`, `county`, `diseases`)\
-         VALUES ('{0}',123,76,'{1}','{2}',1,'1980-03-21 02:51:21','浙江省','杭州市','滨江区','直肠癌')".format(self.MemberId,name,phone)
+         VALUES ('{0}',126,85,'{1}','{2}',1,'1980-03-21 02:51:21','浙江省','杭州市','滨江区','直肠癌')".format(self.MemberId,name,phone)
         self.cursor1.execute(sql)
         self.cursor1.execute('SELECT @@IDENTITY')
         self.Patientid = self.cursor1.fetchone()[0]
@@ -218,9 +220,14 @@ class Pyodbc:
         # print(self.userid,self.MemberId,self.Patientid)
 
     def CreateSchedule(self):
+        self.Patientid = 312
         state = int(random.sample([0,1,2],1)[0])
+        id = random.sample(self.Scheduld_Userid,1)[0]
+        starttime = datetime.datetime.now()+datetime.timedelta(hours=1)
+        endtime = datetime.datetime.now()+datetime.timedelta(hours=2)
         sql = "INSERT INTO `schedule`(`patient_id`, `user_id`, `start_time`, `end_time`, `creator_id`, `creator`, `create_time`, `state`, `finish_time`) \
-        VALUES ('{0}','{1}','2019-03-21 02:51:21','2019-03-21 05:51:21',76,'医生助理38110','2019-03-21 02:51:21',{2},'2019-03-21 05:51:21')".format(self.Patientid,self.userid,state)
+        VALUES ('{0}','{1}','{3}','{4}',10000,'医生或助理','2019-03-21 02:51:21',{2},'2019-03-21 05:51:21')"\
+        .format(self.Patientid,id,state,starttime,endtime)
         self.cursor1.execute(sql)
         self.cursor1.execute('SELECT @@IDENTITY')
         self.Scheduleid = self.cursor1.fetchone()[0]
@@ -229,14 +236,14 @@ class Pyodbc:
         if state == 2:
             state = 0
             sql = "INSERT INTO `schedule`(`patient_id`, `user_id`, `start_time`, `end_time`, `creator_id`, `creator`,`state`, `finish_time`) \
-            VALUES ('{0}','{1}','2019-03-21 02:51:21','2019-03-21 05:51:21',76,'医生助理38110',{2},'2019-03-21 05:51:21')".format(self.Patientid,self.userid,state)
+            VALUES ('{0}','{1}','2019-03-21 02:51:21','2019-03-21 05:51:21',10000,'医生或助理',{2},'2019-03-21 05:51:21')".format(self.Patientid,self.userid,state)
             self.cursor1.execute(sql)
             self.conn1.commit()
             self.CreateAccompany()
     
     def CreateAccompany(self):
         sql = "INSERT INTO `accompany`(`patient_id`, `user_id`, `schedule_id`, `name`,`content`, `suggest`, `tags`, `images`, `state`, `remark`) \
-        VALUES ('{0}','{1}','{2}','医生助理38110','content111','suggest22222','[1],[2]','1.jpg',1,'remark333')".format(self.Patientid,self.userid,self.Scheduleid)
+        VALUES ('{0}','{1}','{2}','医生或助理','content111','suggest22222','[1],[2]','1.jpg',1,'remark333')".format(self.Patientid,self.userid,self.Scheduleid)
         self.cursor1.execute(sql)
         self.conn1.commit()
 
@@ -261,7 +268,7 @@ class Pyodbc:
         account_type = random.sample([1,2,3],1)[0]
         nowtime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sql = "INSERT INTO `account_list`(`user_id`, `title`, `before_money`, `money`, `balance`, `direction`, `create_time`, `account_type`, `business_type`, `remark`)\
-         VALUES ('{0}','奖励明细',100,100,100,{1},'{2}',{3},0,'巴拉巴拉巴拉')".format('17d720c0-b3f2-4a7a-95f8-9071cc891536',direction,nowtime,account_type)
+         VALUES ('{0}','奖励明细',100,100,100,{1},'{2}',{3},0,'巴拉巴拉巴拉')".format('ba9bb39d-6602-4480-a001-572c03f0962d',direction,nowtime,account_type)
         self.cursor1.execute(sql)
         self.conn1.commit()
     
@@ -273,7 +280,7 @@ class Pyodbc:
 
         
 if __name__ == "__main__":
-    for i in range(100):
+    for i in range(2):
         time.sleep(2)
         a = Pyodbc()
         # a.CreateCenter()
@@ -289,8 +296,8 @@ if __name__ == "__main__":
 
         # a.CreateBonus()
 
-        # a.CreateAccount()
-        a.test()
+        a.CreateAccount()
+        # a.test()
 
 # DELETE FROM center WHERE center_name LIKE '运营中心%';
 # DELETE FROM assistant WHERE name LIKE '医生助理%';
